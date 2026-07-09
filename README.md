@@ -20,6 +20,18 @@ drop content, URLs, or ranking signals:
   pages with titles, descriptions, heading outlines
 - [docs/source/legacy-site-scrape.json](docs/source/legacy-site-scrape.json) —
   the raw capture
+- [docs/design/reference-analysis.md](docs/design/reference-analysis.md) — the
+  homepage concept, its palette, and where it contradicts the business
+
+## Decisions
+
+- **CMS:** Payload, mounted as a route inside the Next.js app, backed by the
+  same Supabase Postgres. Chosen over a hand-rolled admin (drafts, versions,
+  media, roles come for free) and over external SaaS (keeps content in one
+  database).
+- **Media `alt` is a required field.** The legacy site's largest single defect
+  is 244 images with no alt text; the content model makes that impossible
+  rather than merely discouraged.
 
 ## Planning
 
