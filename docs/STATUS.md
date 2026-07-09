@@ -6,7 +6,7 @@ project back up.
 ## Where it stands
 
 The site builds, all 22 legacy URLs resolve, and the whole thing is under test:
-**68 unit + 175 end-to-end**, the latter across desktop, tablet and mobile.
+**68 unit + 229 end-to-end**, the latter across desktop, tablet and mobile.
 
 | Requirement | State |
 |---|---|
@@ -15,7 +15,8 @@ The site builds, all 22 legacy URLs resolve, and the whole thing is under test:
 | Metadata carried over verbatim | ✅ seeded from the crawl |
 | `LocalBusiness` / `Service` / `FAQPage` schema | ✅ derived from CMS content |
 | Media requires alt text | ✅ enforced in the collection |
-| Contact form, voivodeship routing | ✅ persists before mailing |
+| Contact form, voivodeship routing | ✅ persists before mailing; REST create closed |
+| Transactional mail | ⚠️ adapter wired, no SMTP credentials yet |
 | GTM behind a consent gate | ✅ asserted at the network layer |
 | CMS the client can operate | ✅ Payload at `/admin`, 83 records seeded |
 | Core Web Vitals | ⚠️ LCP measured at 112 ms locally; no field data |
