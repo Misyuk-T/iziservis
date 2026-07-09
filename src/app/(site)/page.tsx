@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
+import { Carousel } from '@/components/ui/Carousel'
 import { ButtonAnchor, Container, GhostLink, Section } from '@/components/ui/Section'
 import { COMPANY } from '@/domain/company'
 import { getBrands, getEquipmentCategories } from '@/domain/content'
@@ -164,6 +165,41 @@ export default async function HomePage() {
             </RevealItem>
           ))}
         </RevealGroup>
+      </Section>
+
+      {/*
+        A carousel, not a wrapping grid, because on a phone nine wordmarks
+        stacked two-wide push the call to action a screen and a half down. It
+        has no autoplay: WCAG 2.2.2 would then owe a pause control, and a logo
+        row that moves by itself earns nothing.
+      */}
+      <Section className="!pt-0">
+        <Reveal>
+          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Serwisujemy urządzenia wiodących marek
+          </h2>
+          <p className="mt-3 max-w-xl text-pretty text-muted">
+            Sześć z nich to autoryzowany serwis — z oryginalnymi częściami i zachowaną gwarancją.
+          </p>
+        </Reveal>
+
+        <Carousel label="Marki, które serwisujemy" className="mt-10">
+          {brands.map((brand) => (
+            <div
+              key={brand.slug}
+              className="flex h-full min-h-32 flex-col justify-center rounded-2xl border border-green-900/10 p-5"
+            >
+              <span className="text-base font-semibold text-green-900">{brand.name}</span>
+              {brand.authorized ? (
+                <span className="mt-2 text-xs font-semibold text-link-green">
+                  Autoryzowany serwis
+                </span>
+              ) : (
+                <span className="mt-2 text-xs text-muted">Marka partnerska</span>
+              )}
+            </div>
+          ))}
+        </Carousel>
       </Section>
 
       <Section dark className="!py-16 lg:!py-20">

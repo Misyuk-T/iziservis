@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import { ConsentGate } from '@/components/analytics/ConsentGate'
 import { SmoothScrollProvider } from '@/components/motion/SmoothScrollProvider'
 import { SiteFooter } from '@/components/site/SiteFooter'
 import { SiteHeader } from '@/components/site/SiteHeader'
@@ -26,6 +27,10 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
           <SiteHeader />
           <main id="main">{children}</main>
           <SiteFooter />
+
+          {/* AD-12: GTM is injected only after consent, and never at all if
+              NEXT_PUBLIC_GTM_ID is unset. No analytics id lives in the source. */}
+          <ConsentGate gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
         </SmoothScrollProvider>
       </body>
     </html>

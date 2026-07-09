@@ -30,6 +30,13 @@ const schema = z.object({
 
   NEXT_PUBLIC_SITE_URL: z.string().url(),
 
+  // AD-12: optional. Absent means no tag surface at all, which is the correct
+  // default until the client decides whether to carry over G-99MVR70KRC.
+  NEXT_PUBLIC_GTM_ID: z
+    .string()
+    .regex(/^GTM-[A-Z0-9]+$/, 'Must be a GTM container id, not a GA4 measurement id')
+    .optional(),
+
   // Supabase Storage, S3-compatible. Optional until media upload is wired.
   S3_BUCKET: z.string().optional(),
   S3_ENDPOINT: z.string().url().optional(),
