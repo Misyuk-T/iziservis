@@ -39,5 +39,20 @@ Planning and implementation artifacts are produced with
 [BMAD](https://bmadcode.com/) (v6.10.0, `bmm` module), installed under
 `_bmad/`. Output lands in `docs/planning/` and `docs/stories/`.
 
+- [Product brief](docs/planning/briefs/brief-iziservis-2026-07-10/brief.md)
+  ([addendum](docs/planning/briefs/brief-iziservis-2026-07-10/addendum.md))
+- [PRD](docs/planning/prds/prd-iziservis-2026-07-10/prd.md) — 18 functional
+  requirements, 9 open questions
+- [Architecture spine](docs/planning/architecture/architecture-iziservis-2026-07-10/architecture.md)
+  — 12 architectural decisions, pinned stack
+
 Config that the installer must not regress is pinned in
 `_bmad/custom/config.toml`.
+
+## Blocked
+
+- **Supabase connector is not authorized**, so the project, schema and RLS
+  policies cannot be provisioned. Authorize it via claude.ai connector settings
+  or `claude mcp` in an interactive terminal.
+- **Nine open questions** in PRD §9 belong to the client. Five of them block
+  the content model or the copy.
