@@ -36,7 +36,32 @@ export const Leads: CollectionConfig = {
       relationTo: 'voivodeships',
       required: true,
     },
-    { name: 'message', type: 'textarea' },
+    {
+      name: 'topic',
+      type: 'select',
+      required: true,
+      options: ['Serwis', 'Przegląd', 'Wycena', 'Zapytanie ogólne'].map((t) => ({
+        label: t,
+        value: t,
+      })),
+    },
+    { name: 'message', type: 'textarea', required: true },
+    {
+      name: 'consent',
+      type: 'checkbox',
+      required: true,
+      label: 'Zgoda na przetwarzanie danych',
+      admin: {
+        readOnly: true,
+        description:
+          'GDPR: zapisujemy fakt udzielenia zgody wraz ze zgłoszeniem. Bez zgody formularz nie przechodzi walidacji po stronie serwera.',
+      },
+    },
+    {
+      name: 'consentAt',
+      type: 'date',
+      admin: { readOnly: true, description: 'Kiedy zgoda została udzielona.' },
+    },
     {
       name: 'deliveredAt',
       type: 'date',

@@ -327,9 +327,9 @@ export interface Brand {
    */
   authorized?: boolean | null;
   /**
-   * Logo producenta. Alt jest wymagany po stronie kolekcji Media.
+   * Opcjonalne. Bez logo marka renderuje się jako tekst. Po wgraniu obrazu alt jest wymagany (kolekcja Media).
    */
-  logo: number | Media;
+  logo?: (number | null) | Media;
   description?: string | null;
   /**
    * Cztery marki mają dziś własne strony: Unic, Stalgast, Firex, Convotherm.
@@ -392,7 +392,16 @@ export interface Lead {
   company: string;
   phone: string;
   voivodeship: number | Voivodeship;
-  message?: string | null;
+  topic: 'Serwis' | 'Przegląd' | 'Wycena' | 'Zapytanie ogólne';
+  message: string;
+  /**
+   * GDPR: zapisujemy fakt udzielenia zgody wraz ze zgłoszeniem. Bez zgody formularz nie przechodzi walidacji po stronie serwera.
+   */
+  consent: boolean;
+  /**
+   * Kiedy zgoda została udzielona.
+   */
+  consentAt?: string | null;
   /**
    * Ustawiane po pomyślnym wysłaniu e-maila. Puste = zgłoszenie zapisane, ale powiadomienie jeszcze nie doszło.
    */
@@ -645,7 +654,10 @@ export interface LeadsSelect<T extends boolean = true> {
   company?: T;
   phone?: T;
   voivodeship?: T;
+  topic?: T;
   message?: T;
+  consent?: T;
+  consentAt?: T;
   deliveredAt?: T;
   deliveryError?: T;
   updatedAt?: T;

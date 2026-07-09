@@ -1,0 +1,302 @@
+[
+ {
+  "question": "Jakie usługi oferuje IZI Serwis?",
+  "answer": "Oferujemy kompleksowy serwis urządzeń gastronomicznych: naprawy, przeglądy okresowe, instalacje, demontaże i doradztwo techniczne. Obsługujemy sprzęt grzewczy, chłodniczy, zmywarki, ekspresy i urządzenia barowe.",
+  "topic": "Świadczone usługi",
+  "order": 0
+ },
+ {
+  "question": "Czy przeprowadzacie montaż nowych urządzeń?",
+  "answer": "Tak, instalujemy nowe urządzenia zgodnie z dokumentacją producenta i normami technicznymi. Podłączamy sprzęt do mediów oraz przeprowadzamy testy działania.",
+  "topic": "Świadczone usługi",
+  "order": 1
+ },
+ {
+  "question": "Czy oferujecie przeglądy okresowe?",
+  "answer": "Tak, wykonujemy przeglądy techniczne, czyszczenie, kalibracje i konserwację. Przeglądy pomagają zapobiegać awariom i zapewniają zgodność z wymogami sanepidu.",
+  "topic": "Świadczone usługi",
+  "order": 2
+ },
+ {
+  "question": "Czy mogę zlecić Wam relokację kuchni?",
+  "answer": "Tak, oferujemy demontaż, zabezpieczenie i ponowny montaż sprzętu gastronomicznego. Pracujemy sprawnie, zgodnie z zasadami bezpieczeństwa.",
+  "topic": "Świadczone usługi",
+  "order": 3
+ },
+ {
+  "question": "Czy pomagacie w doborze sprzętu?",
+  "answer": "Tak, doradzamy przy wyborze nowych urządzeń na podstawie potrzeb kuchni. Uwzględniamy ergonomię, parametry techniczne i budżet klienta.",
+  "topic": "Świadczone usługi",
+  "order": 4
+ },
+ {
+  "question": "Jak szybko mogę liczyć na reakcję?",
+  "answer": "W Warszawie i okolicach najczęściej reagujemy tego samego lub następnego dnia. W innych regionach działamy przez partnerów w ciągu 24–72h.",
+  "topic": "Dostępność usług",
+  "order": 5
+ },
+ {
+  "question": "Czy działacie poza standardowymi godzinami?",
+  "answer": "Tak, w nagłych przypadkach możliwa jest obsługa poza godzinami pracy. Prosimy o bezpośredni kontakt w celu uzgodnienia szczegółów.",
+  "topic": "Dostępność usług",
+  "order": 6
+ },
+ {
+  "question": "Czy mogę zarezerwować termin z wyprzedzeniem?",
+  "answer": "Tak, możesz zaplanować przegląd, montaż lub naprawę na konkretny dzień i godzinę. Rezerwacje przyjmujemy telefonicznie lub mailowo.",
+  "topic": "Dostępność usług",
+  "order": 7
+ },
+ {
+  "question": "Czy obsługujecie awarie w weekendy?",
+  "answer": "Standardowo pracujemy od poniedziałku do piątku, ale w przypadku krytycznych awarii możliwa jest interwencja weekendowa. Prosimy o pilny kontakt telefoniczny.",
+  "topic": "Dostępność usług",
+  "order": 8
+ },
+ {
+  "question": "Czy działacie na terenie całej Polski?",
+  "answer": "Tak, działamy lokalnie na Mazowszu i ogólnopolsko przez sieć serwisową. Koordynujemy zlecenia i zapewniamy jednolitą jakość obsługi w całym kraju.",
+  "topic": "Dostępność usług",
+  "order": 9
+ },
+ {
+  "question": "Jakie typy urządzeń naprawiacie?",
+  "answer": "Naprawiamy urządzenia grzewcze, chłodnicze, zmywarki, ekspresy do kawy, sprzęt barowy i drobne urządzenia kuchenne. Obsługujemy urządzenia elektryczne, gazowe i wodne.",
+  "topic": "Sprzęt, który naprawiamy",
+  "order": 10
+ },
+ {
+  "question": "Czy naprawiacie urządzenia starsze niż 10 lat?",
+  "answer": "Tak, o ile sprzęt jest bezpieczny w eksploatacji i dostępne są części lub zamienniki. Zawsze informujemy o opłacalności naprawy.",
+  "topic": "Sprzęt, który naprawiamy",
+  "order": 11
+ },
+ {
+  "question": "Czy obsługujecie sprzęt z importu?",
+  "answer": "Tak, serwisujemy także urządzenia spoza oficjalnej dystrybucji w Polsce. Weryfikujemy możliwość pozyskania dokumentacji i części.",
+  "topic": "Sprzęt, który naprawiamy",
+  "order": 12
+ },
+ {
+  "question": "Czy naprawiacie sprzęt barowy i drobny?",
+  "answer": "Tak, zajmujemy się również blenderami, warnikami, podgrzewaczami czy mikserami. Dla tych urządzeń również oferujemy przeglądy.",
+  "topic": "Sprzęt, który naprawiamy",
+  "order": 13
+ },
+ {
+  "question": "Czy mogę przesłać sprzęt do naprawy kurierem?",
+  "answer": "W przypadku drobnych urządzeń jest to możliwe po wcześniejszym uzgodnieniu. Prosimy o kontakt w celu uzyskania instrukcji pakowania i wysyłki.",
+  "topic": "Sprzęt, który naprawiamy",
+  "order": 14
+ },
+ {
+  "question": "Czy serwisujecie wszystkie typy pieców konwekcyjno-parowych?",
+  "answer": "Tak, obsługujemy zarówno modele z prostym sterowaniem, jak i zaawansowane urządzenia z elektroniką. Naprawiamy, kalibrujemy i czyścimy.",
+  "topic": "Piece konwekcyjno-parowe",
+  "order": 15
+ },
+ {
+  "question": "Jak często należy robić przegląd pieca konwekcyjno-parowego?",
+  "answer": "Rekomendujemy przegląd co 3–6 miesięcy w zależności od intensywności użytkowania. Regularna konserwacja znacznie wydłuża żywotność sprzętu.",
+  "topic": "Piece konwekcyjno-parowe",
+  "order": 16
+ },
+ {
+  "question": "Czy oferujecie odkamienianie pieców?",
+  "answer": "Tak, przeprowadzamy odkamienianie układów pary i zbiorników wodnych. To kluczowe dla utrzymania efektywności i bezpieczeństwa pracy.",
+  "topic": "Piece konwekcyjno-parowe",
+  "order": 17
+ },
+ {
+  "question": "Co najczęściej psuje się w piecach konwekcyjno-parowych?",
+  "answer": "Do typowych usterek należą problemy z generatorem pary, czujnikami temperatury i uszczelkami drzwi. Często awarii ulega też elektronika sterująca.",
+  "topic": "Piece konwekcyjno-parowe",
+  "order": 18
+ },
+ {
+  "question": "Czy wykonujecie kalibrację pieców?",
+  "answer": "Tak, kalibrujemy temperaturę, wilgotność i czas pracy, aby zapewnić precyzję działania urządzenia. Robimy to zgodnie z dokumentacją techniczną.",
+  "topic": "Piece konwekcyjno-parowe",
+  "order": 19
+ },
+ {
+  "question": "Jakie typy zmywarek naprawiacie?",
+  "answer": "Obsługujemy zmywarki podblatowe, kapturowe, przelotowe i taśmowe. Naprawiamy urządzenia wszystkich dostępnych na rynku producentów.",
+  "topic": "Zmywarki gastronomiczne",
+  "order": 20
+ },
+ {
+  "question": "Dlaczego moja zmywarka nie domywa naczyń?",
+  "answer": "Przyczyną może być niedrożne ramię myjące, uszkodzona pompa lub nieprawidłowe dozowanie detergentu. Zalecamy pełną diagnostykę.",
+  "topic": "Zmywarki gastronomiczne",
+  "order": 21
+ },
+ {
+  "question": "Czy naprawiacie zmywarki z błędami elektroniki?",
+  "answer": "Tak, zajmujemy się także awariami modułów sterujących, paneli dotykowych i czujników. W razie potrzeby przeprogramowujemy urządzenia.",
+  "topic": "Zmywarki gastronomiczne",
+  "order": 22
+ },
+ {
+  "question": "Czy oferujecie przeglądy zmywarek?",
+  "answer": "Tak, w ramach przeglądu czyścimy filtry, sprawdzamy stan techniczny i wykonujemy testy pracy. Pomaga to uniknąć awarii w godzinach szczytu.",
+  "topic": "Zmywarki gastronomiczne",
+  "order": 23
+ },
+ {
+  "question": "Co mogę zrobić, jeśli zmywarka cieknie?",
+  "answer": "Prawdopodobnie uszkodzone są uszczelki, zawór lub wąż dopływowy. Zalecamy szybki serwis, aby zapobiec zalaniu kuchni.",
+  "topic": "Zmywarki gastronomiczne",
+  "order": 24
+ },
+ {
+  "question": "Czy naprawiacie kuchnie gazowe?",
+  "answer": "Tak, naprawiamy kuchnie, palniki, zawory i instalacje gazowe z zachowaniem wszystkich norm bezpieczeństwa. Posiadamy stosowne uprawnienia.",
+  "topic": "Urządzenia grzewcze",
+  "order": 25
+ },
+ {
+  "question": "Czy zajmujecie się elektrycznymi urządzeniami grzewczymi?",
+  "answer": "Tak, serwisujemy piece, grille, frytownice, bemary i inne urządzenia elektryczne. Naprawiamy grzałki, termostaty i układy sterowania",
+  "topic": "Urządzenia grzewcze",
+  "order": 26
+ },
+ {
+  "question": "Czy wykonujecie testy bezpieczeństwa grzewczego sprzętu?",
+  "answer": "Tak, wykonujemy testy szczelności, uziemienia i poprawności działania zabezpieczeń. To ważne dla bezpieczeństwa personelu.",
+  "topic": "Urządzenia grzewcze",
+  "order": 27
+ },
+ {
+  "question": "Jakie są objawy uszkodzenia grzałki?",
+  "answer": "Urządzenie wolno się nagrzewa lub nie osiąga zadanej temperatury. Może też pojawić się zapach spalenizny lub zwarcie.",
+  "topic": "Urządzenia grzewcze",
+  "order": 28
+ },
+ {
+  "question": "Czy montujecie nowe urządzenia grzewcze?",
+  "answer": "Tak, oferujemy montaż i pierwsze uruchomienie kuchni, pieców, bemarów i innych urządzeń. Zapewniamy zgodność z normami technicznymi.",
+  "topic": "Urządzenia grzewcze",
+  "order": 29
+ },
+ {
+  "question": "Jakie ekspresy naprawiacie?",
+  "answer": "Naprawiamy ekspresy automatyczne, kolbowe i przemysłowe, zarówno ciśnieniowe, jak i przepływowe. Serwisujemy też młynki i warniki.",
+  "topic": "Ekspresy do kawy",
+  "order": 30
+ },
+ {
+  "question": "Czy czyścicie układy mleczne i spieniające?",
+  "answer": "Tak, oferujemy pełne czyszczenie układów mlecznych, w tym dezynfekcję i wymianę wężyków. To ważne dla jakości i higieny napojów.",
+  "topic": "Ekspresy do kawy",
+  "order": 31
+ },
+ {
+  "question": "Czy wykonujecie odkamienianie ekspresów?",
+  "answer": "Tak, regularne odkamienianie jest kluczowe dla utrzymania wydajności i jakości kawy. Używamy środków zalecanych przez producentów.",
+  "topic": "Ekspresy do kawy",
+  "order": 32
+ },
+ {
+  "question": "Co zrobić, jeśli ekspres pokazuje błąd ciśnienia?",
+  "answer": "To może oznaczać awarię pompy, zaworu lub czujnika. Zalecamy natychmiastowe wyłączenie urządzenia i kontakt z serwisem.",
+  "topic": "Ekspresy do kawy",
+  "order": 33
+ },
+ {
+  "question": "Czy kalibrujecie parametry kawy?",
+  "answer": "Tak, możemy ustawić temperaturę, ciśnienie, objętość porcji i czas ekstrakcji. Pomagamy zoptymalizować smak i powtarzalność.",
+  "topic": "Ekspresy do kawy",
+  "order": 34
+ },
+ {
+  "question": "Czy naprawiacie tylko urządzenia, których jesteście autoryzowanym serwisem?",
+  "answer": "Nie – naprawiamy sprzęt wszystkich dostępnych marek. Autoryzacja gwarantuje dostęp do oryginalnych części, ale współpracujemy też z innymi producentami.",
+  "topic": "Marki naprawianego sprzętu",
+  "order": 35
+ },
+ {
+  "question": "Jakie marki najczęściej serwisujecie?",
+  "answer": "Obsługujemy m.in. Convotherm, Electrolux, Bartscher, Hobart, Unic, Astoria, CMA, Rational, Fagor, Merrychef, Hendi i wiele innych.",
+  "topic": "Marki naprawianego sprzętu",
+  "order": 36
+ },
+ {
+  "question": "Czy możecie sprowadzić części do mniej popularnych marek?",
+  "answer": "Tak, mamy dostęp do szerokiej bazy dostawców i zamienników. Zawsze informujemy o czasie oczekiwania i alternatywach.",
+  "topic": "Marki naprawianego sprzętu",
+  "order": 37
+ },
+ {
+  "question": "Czy części zamienne są oryginalne?",
+  "answer": "Stosujemy części oryginalne lub wysokiej jakości zamienniki – zawsze po konsultacji z klientem.",
+  "topic": "Marki naprawianego sprzętu",
+  "order": 38
+ },
+ {
+  "question": "Czy posiadacie magazyn części na miejscu?",
+  "answer": "Tak, dla popularnych marek i modeli posiadamy zapas magazynowy, co przyspiesza naprawy.",
+  "topic": "Marki naprawianego sprzętu",
+  "order": 39
+ },
+ {
+  "question": "Gdzie zlokalizowana jest siedziba IZI Serwis?",
+  "answer": "Nasza główna siedziba znajduje się w Warszawie. Obsługujemy Mazowsze bezpośrednio, a resztę kraju przez sieć partnerską.",
+  "topic": "Lokalizacje świadczonych usług",
+  "order": 40
+ },
+ {
+  "question": "Czy mogę liczyć na serwis poza Warszawą?",
+  "answer": "Tak, działamy ogólnopolsko. Koordynujemy zlecenia także w innych województwach przez wykwalifikowanych partnerów.",
+  "topic": "Lokalizacje świadczonych usług",
+  "order": 41
+ },
+ {
+  "question": "Czy dojeżdżacie do małych miejscowości?",
+  "answer": "Tak, dojeżdżamy zarówno do dużych miast, jak i mniejszych lokalizacji. Czas reakcji może zależeć od regionu.",
+  "topic": "Lokalizacje świadczonych usług",
+  "order": 42
+ },
+ {
+  "question": "Czy muszę przyjeżdżać ze sprzętem do serwisu?",
+  "answer": "Nie – większość napraw wykonujemy na miejscu u klienta. Przy drobnym sprzęcie możliwa jest wysyłka po wcześniejszym uzgodnieniu.",
+  "topic": "Lokalizacje świadczonych usług",
+  "order": 43
+ },
+ {
+  "question": "Czy są różne dane kontaktowe dla różnych województw?",
+  "answer": "Tak – na stronie „Kontakt” znajdziesz przypisane adresy e-mail do każdego regionu. Ułatwia to bezpośrednią obsługę.",
+  "topic": "Lokalizacje świadczonych usług",
+  "order": 44
+ },
+ {
+  "question": "Jakie branże najczęściej obsługujecie?",
+  "answer": "Pracujemy dla gastronomii komercyjnej, hoteli, foodcourtów, cateringu, szkół, przedszkoli i instytucji publicznych.",
+  "topic": "Obsługiwani klienci",
+  "order": 45
+ },
+ {
+  "question": "Czy współpracujecie z firmami cateringowymi?",
+  "answer": "Tak – oferujemy przeglądy, naprawy i wsparcie techniczne sprzętu produkcyjnego i mobilnego.",
+  "topic": "Obsługiwani klienci",
+  "order": 46
+ },
+ {
+  "question": "Czy świadczycie usługi dla administracji publicznej?",
+  "answer": "Tak, obsługujemy stołówki urzędowe, jednostki samorządowe i placówki edukacyjne. Spełniamy wymagania dokumentacyjne i formalne.",
+  "topic": "Obsługiwani klienci",
+  "order": 47
+ },
+ {
+  "question": "Czy obsługujecie klientów indywidualnych?",
+  "answer": "Nasza oferta jest skierowana głównie do sektora profesjonalnego. W wyjątkowych przypadkach możemy pomóc osobom prywatnym – zależnie od rodzaju sprzętu.",
+  "topic": "Obsługiwani klienci",
+  "order": 48
+ },
+ {
+  "question": "Czy można podpisać umowę stałej obsługi?",
+  "answer": "Tak, oferujemy umowy serwisowe z harmonogramem przeglądów i gwarantowanymi czasami reakcji.",
+  "topic": "Obsługiwani klienci",
+  "order": 49
+ }
+]

@@ -33,8 +33,14 @@ export const Brands: CollectionConfig = {
       name: 'logo',
       type: 'upload',
       relationTo: 'media',
-      required: true,
-      admin: { description: 'Logo producenta. Alt jest wymagany po stronie kolekcji Media.' },
+      // Optional, deliberately. The legacy site carries no brand logo assets at
+      // all — brands are rendered as text — and the design reference's logo wall
+      // is invented along with four of its brands. A brand renders as a wordmark
+      // until a real asset exists. Alt stays required on Media regardless.
+      admin: {
+        description:
+          'Opcjonalne. Bez logo marka renderuje się jako tekst. Po wgraniu obrazu alt jest wymagany (kolekcja Media).',
+      },
     },
     { name: 'description', type: 'textarea' },
     {
