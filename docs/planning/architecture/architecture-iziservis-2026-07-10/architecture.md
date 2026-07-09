@@ -182,6 +182,47 @@ bundle.
   container is not injected until consent is granted. No analytics identifier
   appears in application source. *(The legacy site hard-codes `G-99MVR70KRC`.)*
 
+### AD-13 — Reduced motion is enforced in CSS, never in JS
+
+- **Binds:** FR-5, FR-8
+- **Prevents:** reduced-motion visitors receiving a blank page.
+- **[ADOPTED]** Found in build. `useReducedMotion()` returns `null` on the first
+  client render. Branching on it let motion write an inline `opacity: 0` before
+  the flag resolved; on the next render `whileInView` was dropped, and nothing
+  ever animated the element back. Content stayed invisible permanently.
+- **Rule:** reveal components always animate. `globals.css` carries
+  `@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1
+  !important; transform: none !important } }`. A stylesheet rule beats an inline
+  style, applies before first paint, and cannot lose a hydration race.
+
+### AD-14 — Text colour never comes from an opacity modifier
+
+- **Binds:** FR-6
+- **Prevents:** shipping a colour no test ever measured.
+- **[ADOPTED]** Tailwind 4 compiles `text-green-900/80` to `oklab(… / 0.8)`,
+  which axe cannot evaluate — but the deeper problem is that `/80` invents a
+  colour outside the token set, so AD-7's contrast test never sees it.
+- **Rule:** every text colour is a solid token in `src/design/tokens.ts`.
+  Secondary text uses `muted` (on the page) or `muted-on-dark` (on any green
+  surface, measured against the *lightest* of them). Opacity modifiers remain
+  legal for borders and decorative fills, which owe no contrast.
+
+### AD-15 — Nothing above the fold animates on mount
+
+- **Binds:** §5 Performance
+- **Prevents:** deferring LCP by the length of an entrance animation.
+- **Rule:** Chrome does not count an element with `opacity: 0` as painted, so
+  the hero `<h1>` — the LCP element — renders immediately. `Reveal` is for
+  content below the fold, where it costs nothing.
+
+### AD-16 — Target size is enforced at the AA bar, not the AAA one
+
+- **Binds:** FR-7, FR-8
+- **Rule:** WCAG 2.2 §2.5.8 (Level AA) requires **24×24** CSS pixels. The
+  familiar 44×44 is §2.5.5, Level AAA. The build gate asserts 24×24 for every
+  standalone control, and 44×44 only for the controls a panicking visitor
+  reaches for: the `tel:` links and the contact form's submit button.
+
 ## Consistency Conventions
 
 | Concern | Convention |
