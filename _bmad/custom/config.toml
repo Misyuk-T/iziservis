@@ -1,0 +1,20 @@
+# Team / enterprise overrides for _bmad/config.toml.
+# Committed to the repo — applies to every developer on the project.
+# Tables deep-merge over base config; keyed entries merge by key.
+# Example: override an agent descriptor, or add a new agent.
+#
+# [agents.bmad-agent-pm]
+# description = "Prefers short, bulleted PRDs over narrative drafts."
+
+# `bmad install --yes` leaves [core] unset, so `{output_folder}` resolves
+# literally. Pinned here because the installer never rewrites this file.
+
+[core]
+project_name = "iziservis"
+document_output_language = "English"
+output_folder = "{project-root}/docs"
+
+[modules.bmm]
+planning_artifacts = "{project-root}/docs/planning"
+implementation_artifacts = "{project-root}/docs/stories"
+project_knowledge = "{project-root}/docs"
