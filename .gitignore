@@ -10,6 +10,9 @@ coverage/
 .env.*
 !.env.example
 
+# Credentials and anything else that must never leave this machine.
+docs/internal/
+
 .DS_Store
 *.log
 npm-debug.log*

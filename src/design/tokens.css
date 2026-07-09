@@ -1,0 +1,21 @@
+/*
+ * Generated companion to src/design/tokens.ts — the single source of truth.
+ * tests/contrast/css-parity.test.ts fails if these drift apart.
+ *
+ * AD-7: no component may contain a hex literal. Use the semantic vars.
+ */
+@theme {
+  --color-green-900: #022114;
+  --color-green-800: #042315;
+  --color-green-700: #09311D;
+  --color-brand-green: #419D45;
+  --color-action-green: #37843A;
+  --color-link-green: #29632C;
+
+  --color-text-on-dark: #FFFFFF;
+  --color-page: #FEFEFE;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}

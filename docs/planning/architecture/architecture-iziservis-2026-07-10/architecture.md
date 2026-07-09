@@ -72,9 +72,14 @@ bundle.
   Supabase's transaction pooler, which does not support prepared statements.
 - **Rule:** `DATABASE_URL` is the runtime connection (transaction pooler, port
   6543, `pgbouncer=true`). `DATABASE_DIRECT_URL` is the migration connection
-  (direct or session pooler, port 5432). Payload's `pool.connectionString`
-  uses the former; `payload migrate` and every Drizzle CLI command use the
-  latter. Neither is ever substituted for the other.
+  (session pooler, port 5432). Payload's `pool.connectionString` uses the
+  former; `payload migrate` and every Drizzle CLI command use the latter.
+  Neither is ever substituted for the other.
+- **[ADOPTED]** Verified against the live project on 2026-07-10. The direct
+  host `db.<ref>.supabase.co` does **not resolve** on this project — no A and
+  no AAAA record — so the session pooler on port 5432 stands in for it. Both
+  pooler endpoints were confirmed reachable; Postgres is 17.6 in
+  `eu-central-1`.
 
 ### AD-3 — Push mode never touches production
 

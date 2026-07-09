@@ -1,0 +1,69 @@
+@import 'tailwindcss';
+@import '../../design/tokens.css';
+
+/*
+ * Motion is opt-out by the user agent, not by us.
+ *
+ * WCAG 2.2 §2.3.3 (Animation from Interactions) and §2.2.2 (Pause, Stop, Hide).
+ * Everything below collapses to instant when the visitor asks for reduced
+ * motion — including the Lenis smooth scroll, which is disabled outright in
+ * SmoothScrollProvider rather than merely sped up.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  /* Lenis drives scrolling; native smooth would fight it. */
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-green-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * FR-8: focus is visible on every interactive element, against every background
+ * it appears on. Two rings — a dark one and a light one — so the indicator
+ * survives both the white page and the green hero.
+ */
+:focus-visible {
+  outline: 3px solid var(--color-brand-green);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--color-text-on-dark);
+}
+
+/* FR-8: the skip link is the first focusable element. */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--color-action-green);
+  color: var(--color-text-on-dark);
+  border-radius: 0 0 0.5rem 0.5rem;
+  transition: top 150ms var(--ease-out-soft);
+}
+
+.skip-link:focus {
+  top: 0;
+}
