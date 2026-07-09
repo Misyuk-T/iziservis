@@ -58,7 +58,7 @@ export default async function KnowledgeCentrePage() {
                           +
                         </span>
                       </summary>
-                      <p className="pb-4 pr-8 text-pretty leading-relaxed text-green-900/75">
+                      <p className="pb-4 pr-8 text-pretty leading-relaxed text-muted">
                         {entry.answer}
                       </p>
                     </details>

@@ -30,7 +30,7 @@ export default async function ContactPage() {
           <div>
             <h2 className="text-xl font-bold text-green-900 sm:text-2xl">Dane kontaktowe</h2>
 
-            <dl className="mt-6 space-y-5 text-green-900/80">
+            <dl className="mt-6 space-y-5 text-muted">
               <div>
                 <dt className="text-sm font-semibold uppercase tracking-wide text-link-green">Telefon</dt>
                 <dd className="mt-1">
@@ -63,7 +63,7 @@ export default async function ContactPage() {
                 <dd className="mt-1 leading-relaxed">
                   Poniedziałek – Piątek: {COMPANY.opensAt} – {COMPANY.closesAt}
                   <br />
-                  <span className="text-green-900/60">{COMPANY.afterHoursNote}</span>
+                  <span className="text-muted">{COMPANY.afterHoursNote}</span>
                 </dd>
               </div>
             </dl>
@@ -72,7 +72,7 @@ export default async function ContactPage() {
           <Reveal>
             <div>
               <h2 className="text-xl font-bold text-green-900 sm:text-2xl">Zostaw wiadomość</h2>
-              <p className="mt-2 text-green-900/70">
+              <p className="mt-2 text-muted">
                 Wybierz województwo — zgłoszenie trafi prosto do doradcy z Twojego regionu.
               </p>
               <div className="mt-8">

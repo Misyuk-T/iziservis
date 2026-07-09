@@ -11,13 +11,23 @@
  * 4.5:1 threshold. Conflating them is how a palette passes review and fails
  * users.
  *
+ * Opacity modifiers (`text-green-900/80`) are banned for text. Tailwind 4 emits
+ * `oklab(... / 0.8)` for them, which axe cannot evaluate — but more importantly
+ * they invent a colour no test ever checked. Every text colour is a solid token
+ * below, measured here.
+ *
  * `usableAs` is the contract:
  *   surface-under-white-text — a background white body text sits on (4.5:1 vs textOnDark)
  *   text-on-light           — a foreground for body text on the page (4.5:1 vs pageBackground)
+ *   text-on-dark            — a foreground for body text on any green surface (4.5:1 vs the lightest, green-700)
  *   nontext-only            — icons, borders, large display text (3:1)
  */
 
-export type Usage = 'surface-under-white-text' | 'text-on-light' | 'nontext-only'
+export type Usage =
+  | 'surface-under-white-text'
+  | 'text-on-light'
+  | 'text-on-dark'
+  | 'nontext-only'
 
 export type Token = {
   hex: string
@@ -30,6 +40,12 @@ export const textOnDark = '#FFFFFF'
 
 /** The page canvas, sampled from the design reference. */
 export const pageBackground = '#FEFEFE'
+
+/**
+ * The lightest dark surface. Anything declared `text-on-dark` is measured
+ * against this, because passing on green-900 says nothing about green-700.
+ */
+export const lightestDarkSurface = '#09311D'
 
 export const tokens = {
   'green-900': {
@@ -62,6 +78,16 @@ export const tokens = {
     usableAs: ['text-on-light'],
     note: 'Green text on the page canvas. 7.14:1 — AAA.',
   },
+  muted: {
+    hex: '#495F56',
+    usableAs: ['text-on-light'],
+    note: 'Secondary body text on the page canvas. 6.82:1.',
+  },
+  'muted-on-dark': {
+    hex: '#BAC5C0',
+    usableAs: ['text-on-dark'],
+    note: 'Secondary body text on any green surface. 8.06:1 against the lightest (green-700).',
+  },
 } as const satisfies Record<string, Token>
 
 export type TokenName = keyof typeof tokens
@@ -88,6 +114,7 @@ export function contrastRatio(a: string, b: string): number {
 export const thresholds: Record<Usage, number> = {
   'surface-under-white-text': 4.5,
   'text-on-light': 4.5,
+  'text-on-dark': 4.5,
   'nontext-only': 3,
 }
 
@@ -95,5 +122,6 @@ export const thresholds: Record<Usage, number> = {
 export const reference: Record<Usage, string> = {
   'surface-under-white-text': textOnDark,
   'text-on-light': pageBackground,
+  'text-on-dark': lightestDarkSurface,
   'nontext-only': pageBackground,
 }

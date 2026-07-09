@@ -239,6 +239,10 @@ export interface Service {
    * Zmiana slug-a wymaga przekierowania 301 w src/domain/redirects.ts. Zobacz AD-6.
    */
   slug: string;
+  /**
+   * Kolejność wyświetlania. Niższa liczba = wyżej.
+   */
+  order: number;
   summary: string;
   body?: {
     root: {
@@ -282,6 +286,10 @@ export interface EquipmentCategory {
    * Zmiana slug-a wymaga przekierowania 301 w src/domain/redirects.ts. Zobacz AD-6.
    */
   slug: string;
+  /**
+   * Kolejność wyświetlania. Niższa liczba = wyżej.
+   */
+  order: number;
   summary: string;
   body?: {
     root: {
@@ -570,6 +578,7 @@ export interface PagesSelect<T extends boolean = true> {
 export interface ServicesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  order?: T;
   summary?: T;
   body?: T;
   heroImage?: T;
@@ -591,6 +600,7 @@ export interface ServicesSelect<T extends boolean = true> {
 export interface EquipmentCategoriesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  order?: T;
   summary?: T;
   body?: T;
   heroImage?: T;

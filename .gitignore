@@ -23,3 +23,9 @@ pnpm-debug.log*
 
 # BMAD: personal, per-developer config
 _bmad/config.user.toml
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

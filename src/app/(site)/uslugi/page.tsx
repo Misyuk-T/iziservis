@@ -32,7 +32,7 @@ export default async function ServicesIndexPage() {
                 className="group flex h-full flex-col rounded-2xl border border-green-900/10 p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
               >
                 <h3 className="text-xl font-semibold text-green-900">{service.title}</h3>
-                <p className="mt-3 grow text-sm leading-relaxed text-green-900/70 sm:text-base">
+                <p className="mt-3 grow text-sm leading-relaxed text-muted sm:text-base">
                   {service.summary}
                 </p>
                 <span className="mt-6 text-sm font-semibold text-link-green">

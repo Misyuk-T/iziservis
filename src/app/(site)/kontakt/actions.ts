@@ -5,7 +5,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { COMPANY } from '@/domain/company'
-import { leadSchema } from '@/domain/leadSchema'
+import { isBot, leadSchema } from '@/domain/leadSchema'
 
 export type FormState = {
   status: 'idle' | 'success' | 'error'
@@ -25,6 +25,9 @@ export type FormState = {
  * dropped.
  */
 export async function submitLead(_prev: FormState, formData: FormData): Promise<FormState> {
+  // Before validation, so a bot never receives an error naming the honeypot.
+  if (isBot(formData)) return { status: 'success' }
+
   const raw = {
     name: formData.get('name'),
     email: formData.get('email'),
@@ -34,7 +37,6 @@ export async function submitLead(_prev: FormState, formData: FormData): Promise<
     topic: formData.get('topic'),
     message: formData.get('message'),
     consent: formData.get('consent') === 'on',
-    website: formData.get('website') ?? '',
   }
 
   const parsed = leadSchema.safeParse(raw)
@@ -47,9 +49,6 @@ export async function submitLead(_prev: FormState, formData: FormData): Promise<
     }
     return { status: 'error', message: 'Sprawdź zaznaczone pola.', fieldErrors }
   }
-
-  // Honeypot tripped. Answer as though it worked — a bot learns nothing.
-  if (parsed.data.website) return { status: 'success' }
 
   const payload = await getPayload({ config })
 

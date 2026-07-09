@@ -19,6 +19,7 @@ export type EquipmentCategory = {
   slug: string
   title: string
   summary: string
+  order: number
   seo: { title: string; description: string }
 }
 
@@ -52,7 +53,7 @@ export async function getEquipmentCategories(): Promise<EquipmentCategory[]> {
     collection: 'equipment-categories',
     limit: 50,
     depth: 0,
-    sort: 'title',
+    sort: 'order',
   })
   return docs as unknown as EquipmentCategory[]
 }
@@ -70,7 +71,7 @@ export async function getEquipmentCategory(slug: string): Promise<EquipmentCateg
 
 export async function getServices(): Promise<Service[]> {
   const p = await payload()
-  const { docs } = await p.find({ collection: 'services', limit: 50, depth: 0, sort: 'title' })
+  const { docs } = await p.find({ collection: 'services', limit: 50, depth: 0, sort: 'order' })
   return docs as unknown as Service[]
 }
 

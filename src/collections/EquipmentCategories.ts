@@ -10,7 +10,8 @@ import { seoFields, slugField } from './fields/seo'
 export const EquipmentCategories: CollectionConfig = {
   slug: 'equipment-categories',
   labels: { singular: 'Kategoria urządzeń', plural: 'Kategorie urządzeń' },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'slug', '_status'] },
+  admin: { useAsTitle: 'title', defaultColumns: ['order', 'title', 'slug', '_status'] },
+  defaultSort: 'order',
   versions: { drafts: true },
   access: {
     read: ({ req }) => (req.user ? true : { _status: { equals: 'published' } }),
@@ -21,6 +22,13 @@ export const EquipmentCategories: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true },
     slugField,
+    {
+      name: 'order',
+      type: 'number',
+      required: true,
+      defaultValue: 0,
+      admin: { description: 'Kolejność wyświetlania. Niższa liczba = wyżej.' },
+    },
     { name: 'summary', type: 'textarea', required: true },
     { name: 'body', type: 'richText' },
     { name: 'heroImage', type: 'upload', relationTo: 'media' },

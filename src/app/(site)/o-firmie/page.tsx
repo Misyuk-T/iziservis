@@ -41,7 +41,7 @@ export default async function AboutPage() {
       <Section dark className="!pt-0">
         <Reveal>
           <h2 className="text-2xl font-bold sm:text-3xl">Autoryzacje</h2>
-          <p className="mt-3 max-w-2xl text-text-on-dark/80">
+          <p className="mt-3 max-w-2xl text-muted-on-dark">
             Jesteśmy oficjalnym partnerem serwisowym i/lub dystrybutorem tych producentów. To
             oznacza szkolenia u producenta, dostęp do oryginalnych części i naprawy bez utraty
             gwarancji.

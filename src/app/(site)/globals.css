@@ -18,10 +18,24 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /*
+   * Scroll reveals are driven by JS, which writes opacity/transform inline.
+   * This rule beats an inline style and lands before first paint, so a
+   * reduced-motion visitor never sees a faded element and never depends on an
+   * IntersectionObserver firing to read the page.
+   */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 :root {
   color-scheme: light;
+
+  /* Must match `h-16` on <header>. The mobile menu panel offsets against it. */
+  --header-h: 4rem;
 }
 
 html {

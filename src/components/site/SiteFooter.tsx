@@ -4,13 +4,15 @@ import { COMPANY } from '@/domain/company'
 
 export function SiteFooter() {
   return (
-    <footer className="on-dark mt-24 bg-green-900 text-text-on-dark">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-3">
+    // No top margin. The homepage ends on a dark CTA, and a margin here painted a
+    // white band between two dark sections that read as a rendering bug.
+    <footer className="on-dark border-t border-text-on-dark/10 bg-green-900 text-text-on-dark">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
         <div>
           <p className="text-lg font-bold">
             IZI <span className="text-brand-green">SERWIS</span>
           </p>
-          <address className="mt-4 not-italic leading-relaxed text-text-on-dark/80">
+          <address className="mt-4 not-italic leading-relaxed text-muted-on-dark">
             {COMPANY.legalName}
             <br />
             {COMPANY.street}
@@ -35,7 +37,7 @@ export function SiteFooter() {
               </a>
             </li>
           </ul>
-          <p className="mt-4 text-sm text-text-on-dark/70">
+          <p className="mt-4 text-sm text-muted-on-dark">
             Poniedziałek – Piątek: {COMPANY.opensAt} – {COMPANY.closesAt}
             <br />
             {COMPANY.afterHoursNote}

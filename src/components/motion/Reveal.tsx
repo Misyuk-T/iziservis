@@ -1,17 +1,30 @@
 'use client'
 
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
 
 /**
  * Scroll-triggered reveal.
  *
- * `useReducedMotion` collapses the transform and the delay to nothing, so the
- * content is simply present rather than animating faster. `once` means an
- * element never re-animates when scrolled past a second time — repeated motion
- * on a page a visitor is trying to read is the failure mode WCAG 2.2.2 exists
- * to prevent.
+ * Reduced motion is enforced in CSS, not here. `useReducedMotion()` returns
+ * null on the first client render, so branching on it means motion writes an
+ * inline `opacity: 0` before the flag resolves — and once `whileInView` is
+ * dropped on the next render, nothing ever animates it back. The element stays
+ * invisible forever, and the visitor who asked for less motion gets a blank
+ * page instead.
+ *
+ * So: these elements always animate, and `globals.css` overrides them with
+ * `[data-reveal] { opacity: 1 !important }` under
+ * `prefers-reduced-motion: reduce`. A stylesheet rule beats an inline style,
+ * applies before first paint, and cannot lose a hydration race.
+ *
+ * `once` means an element never re-animates when scrolled past twice — repeated
+ * motion on a page someone is trying to read is what WCAG 2.2.2 exists to stop.
  */
+
+const EASE = [0.22, 1, 0.36, 1] as const
+const VIEWPORT = { once: true, margin: '-80px' } as const
+
 export function Reveal({
   children,
   delay = 0,
@@ -23,15 +36,14 @@ export function Reveal({
   y?: number
   className?: string
 }) {
-  const reduced = useReducedMotion()
-
   return (
     <motion.div
+      data-reveal
       className={className}
-      initial={reduced ? false : { opacity: 0, y }}
-      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VIEWPORT}
+      transition={{ duration: 0.6, delay, ease: EASE }}
     >
       {children}
     </motion.div>
@@ -48,18 +60,14 @@ export function RevealGroup({
   className?: string
   stagger?: number
 }) {
-  const reduced = useReducedMotion()
-
   return (
     <motion.div
+      data-reveal
       className={className}
-      initial={reduced ? false : 'hidden'}
-      whileInView={reduced ? undefined : 'visible'}
-      viewport={{ once: true, margin: '-80px' }}
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: stagger } },
-      }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={VIEWPORT}
+      variants={{ hidden: {}, visible: { transition: { staggerChildren: stagger } } }}
     >
       {children}
     </motion.div>
@@ -67,19 +75,14 @@ export function RevealGroup({
 }
 
 export function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
-
   return (
     <motion.div
+      data-reveal
       className={className}
-      variants={
-        reduced
-          ? undefined
-          : {
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-            }
-      }
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
+      }}
     >
       {children}
     </motion.div>

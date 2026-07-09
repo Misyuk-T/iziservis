@@ -24,10 +24,19 @@ export const leadSchema = z.object({
   }),
   message: z.string().trim().min(10, 'Opisz problem w co najmniej 10 znakach'),
   consent: z.literal(true, { message: 'Zgoda jest wymagana, aby wysłać zgłoszenie' }),
-
-  /** Honeypot. Real users never see this field, so a filled value is a bot. */
-  website: z.string().max(0).optional(),
 })
+
+/**
+ * The honeypot is checked *before* validation, never inside it.
+ *
+ * As a schema field it would fail parsing and hand the bot a validation error
+ * naming the field — teaching it exactly which input to leave alone next time.
+ * Checked first, a filled honeypot looks indistinguishable from success.
+ */
+export function isBot(formData: FormData): boolean {
+  const value = formData.get('website')
+  return typeof value === 'string' && value.length > 0
+}
 
 export type LeadInput = z.infer<typeof leadSchema>
 

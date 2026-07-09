@@ -44,7 +44,7 @@ export function ContactForm({ voivodeships }: { voivodeships: Voivodeship[] }) {
         className="rounded-2xl border border-brand-green/40 bg-brand-green/5 p-8"
       >
         <h2 className="text-xl font-semibold text-green-900">Dziękujemy — zgłoszenie przyjęte.</h2>
-        <p className="mt-2 text-green-900/75">
+        <p className="mt-2 text-muted">
           Odezwiemy się najszybciej, jak to możliwe. Jeśli sprawa jest pilna, zadzwoń.
         </p>
       </div>
@@ -113,7 +113,7 @@ export function ContactForm({ voivodeships }: { voivodeships: Voivodeship[] }) {
         {pending ? 'Wysyłanie…' : 'Wyślij zgłoszenie'}
       </button>
 
-      <p className="text-sm text-green-900/60">Pola oznaczone * są wymagane.</p>
+      <p className="text-sm text-muted">Pola oznaczone * są wymagane.</p>
     </form>
   )
 }
@@ -220,9 +220,10 @@ function Consent({ error }: { error?: string }) {
           aria-required="true"
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className="mt-1 size-5 shrink-0 rounded border-green-900/30"
+          // size-6 is 24px — the WCAG 2.2 §2.5.8 AA minimum. size-5 (20px) fails it.
+          className="mt-0.5 size-6 shrink-0 rounded border-green-900/30"
         />
-        <label htmlFor={id} className="text-sm leading-relaxed text-green-900/80">
+        <label htmlFor={id} className="text-sm leading-relaxed text-muted">
           Oświadczam, że zapoznałem/am się z{' '}
           <a href="/polityka-cookies" className="font-medium text-link-green underline underline-offset-2">
             Polityką prywatności

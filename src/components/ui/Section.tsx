@@ -52,7 +52,7 @@ export function PageHeader({
           {title}
         </h1>
         {lead ? (
-          <p className="mt-5 max-w-2xl text-pretty text-base text-text-on-dark/80 sm:text-lg">{lead}</p>
+          <p className="mt-5 max-w-2xl text-pretty text-base text-muted-on-dark sm:text-lg">{lead}</p>
         ) : null}
       </Container>
     </header>
@@ -102,7 +102,7 @@ export function GhostLink({ children, className = '', ...props }: ButtonProps & 
 
 export function Prose({ children }: { children: ReactNode }) {
   return (
-    <div className="max-w-2xl space-y-4 text-base leading-relaxed text-green-900/80 sm:text-lg">
+    <div className="max-w-2xl space-y-4 text-base leading-relaxed text-muted sm:text-lg">
       {children}
     </div>
   )

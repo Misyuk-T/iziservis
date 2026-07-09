@@ -32,7 +32,7 @@ export default async function EquipmentIndexPage() {
                 className="group flex h-full flex-col rounded-2xl border border-green-900/10 p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
               >
                 <h2 className="text-xl font-semibold text-green-900 sm:text-2xl">{category.title}</h2>
-                <p className="mt-3 grow text-pretty text-sm leading-relaxed text-green-900/70 sm:text-base">
+                <p className="mt-3 grow text-pretty text-sm leading-relaxed text-muted sm:text-base">
                   {category.summary}
                 </p>
                 <span className="mt-6 text-sm font-semibold text-link-green">
@@ -53,7 +53,7 @@ export default async function EquipmentIndexPage() {
       <Section dark className="!py-16">
         <Reveal>
           <h2 className="text-2xl font-bold sm:text-3xl">Nie widzisz swojego urządzenia?</h2>
-          <p className="mt-3 max-w-xl text-text-on-dark/80">
+          <p className="mt-3 max-w-xl text-muted-on-dark">
             Serwisujemy znacznie więcej niż pięć kategorii. Napisz, co się zepsuło — odpowiemy, czy
             możemy pomóc.
           </p>

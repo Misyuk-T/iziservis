@@ -67,18 +67,21 @@ const slugify = (s: string) =>
 const EQUIPMENT = [
   {
     slug: 'piece-konwekcyjno-parowe',
+    order: 0,
     title: 'Piece konwekcyjno-parowe',
     summary: 'Serce Twojej kuchni. Serwis, przeglądy i naprawy pieców konwekcyjno-parowych.',
     seo: { title: 'Serwis pieców Warszawa | iziserwis.pl', description: 'Serce Twojej kuchni' },
   },
   {
     slug: 'zmywarki-gastronomiczne',
+    order: 1,
     title: 'Zmywarki gastronomiczne',
     summary: 'Czystość to podstawa. Serwis zmywarek kapturowych, podblatowych i tunelowych.',
     seo: { title: 'Serwis zmywarek Warszawa | iziserwis.pl', description: 'Czystość to podstawa' },
   },
   {
     slug: 'ekspresy-i-urzadzenia-barowe',
+    order: 2,
     title: 'Ekspresy i urządzenia barowe',
     summary: 'Wszystko zaczyna się od gorącej kawy. Serwis ekspresów kolbowych i sprzętu barowego.',
     seo: {
@@ -88,6 +91,7 @@ const EQUIPMENT = [
   },
   {
     slug: 'urzadzenia-chlodnicze',
+    order: 3,
     title: 'Urządzenia chłodnicze',
     summary: 'Chłodzenie bez przerwy — gwarancja bezpieczeństwa i świeżości.',
     seo: {
@@ -97,6 +101,7 @@ const EQUIPMENT = [
   },
   {
     slug: 'urzadzenia-grzewcze',
+    order: 4,
     title: 'Urządzenia grzewcze',
     summary: 'Bez ciepła nie ma kuchni. Kuchnie, patelnie, frytownice, bemary.',
     seo: { title: 'Urządzenia grzewcze - Izi Serwis', description: 'Bez ciepła nie ma kuchni' },
@@ -106,6 +111,7 @@ const EQUIPMENT = [
 const SERVICES = [
   {
     slug: 'przeglady-okresowe',
+    order: 0,
     title: 'Przeglądy okresowe',
     summary: 'Regularna konserwacja to oszczędność, nie koszt.',
     seo: {
@@ -115,6 +121,7 @@ const SERVICES = [
   },
   {
     slug: 'naprawy-awaryjne',
+    order: 1,
     title: 'Naprawy awaryjne',
     summary: 'Szybka naprawa to szybki powrót do pracy.',
     seo: {
@@ -124,6 +131,7 @@ const SERVICES = [
   },
   {
     slug: 'instalacje-i-deinstalacje',
+    order: 2,
     title: 'Instalacje i deinstalacje',
     summary: 'Szybko i bez stresu.',
     // Legacy title reads "Instalacji i deinstalacje" — ungrammatical. Corrected
