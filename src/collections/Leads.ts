@@ -19,8 +19,18 @@ export const Leads: CollectionConfig = {
     defaultColumns: ['email', 'company', 'voivodeship', 'deliveredAt', 'createdAt'],
   },
   access: {
-    // The public may create a lead. Only staff may read one.
-    create: () => true,
+    /**
+     * Closed to the public REST and GraphQL surfaces.
+     *
+     * `create: () => true` looked right — the contact form is public, after all
+     * — but it opened `POST /api/leads` to anyone, which skips the honeypot and
+     * the zod schema in the server action entirely. A bot posted straight to
+     * the collection and was persisted.
+     *
+     * The server action reaches this collection through Payload's Local API,
+     * which bypasses access control by default, so the form still works.
+     */
+    create: () => false,
     read: ({ req }) => Boolean(req.user),
     update: ({ req }) => req.user?.role === 'admin',
     delete: ({ req }) => req.user?.role === 'admin',

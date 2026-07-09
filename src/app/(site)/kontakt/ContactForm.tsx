@@ -15,9 +15,13 @@ const initial: FormState = { status: 'idle' }
  *
  * Every input has a real <label>. Required fields expose aria-required, invalid
  * ones expose aria-invalid and point at their message via aria-describedby. On
- * failure focus moves to the first invalid field; on success the confirmation
- * is announced through a live region and takes focus. Errors are never signalled
- * by colour alone.
+ * failure focus moves to the first invalid field. Errors are never signalled by
+ * colour alone.
+ *
+ * The live region is mounted once, outside the success/failure branch, and
+ * filled afterwards. A `role="status"` node that is inserted with its text
+ * already present is announced unreliably — screen readers watch an existing
+ * region for changes. Focus management is the belt; this is the braces.
  */
 export function ContactForm({ voivodeships }: { voivodeships: Voivodeship[] }) {
   const [state, action, pending] = useActionState(submitLead, initial)
@@ -35,29 +39,47 @@ export function ContactForm({ voivodeships }: { voivodeships: Voivodeship[] }) {
     if (state.status === 'success') successRef.current?.focus()
   }, [state])
 
-  if (state.status === 'success') {
-    return (
-      <div
-        ref={successRef}
-        tabIndex={-1}
-        role="status"
-        className="rounded-2xl border border-brand-green/40 bg-brand-green/5 p-8"
-      >
-        <h2 className="text-xl font-semibold text-green-900">Dziękujemy — zgłoszenie przyjęte.</h2>
-        <p className="mt-2 text-muted">
-          Odezwiemy się najszybciej, jak to możliwe. Jeśli sprawa jest pilna, zadzwoń.
-        </p>
+  return (
+    <>
+      {/* Mounted for the whole life of the page, so a change inside it is heard. */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {state.status === 'success' ? 'Zgłoszenie przyjęte. Odezwiemy się najszybciej, jak to możliwe.' : null}
+        {state.status === 'error' ? state.message : null}
       </div>
-    )
-  }
 
+      {state.status === 'success' ? (
+        <div
+          ref={successRef}
+          tabIndex={-1}
+          className="rounded-2xl border border-brand-green/40 bg-brand-green/5 p-8"
+        >
+          <h2 className="text-xl font-semibold text-green-900">Dziękujemy — zgłoszenie przyjęte.</h2>
+          <p className="mt-2 text-muted">
+            Odezwiemy się najszybciej, jak to możliwe. Jeśli sprawa jest pilna, zadzwoń.
+          </p>
+        </div>
+      ) : (
+        <FormBody state={state} action={action} pending={pending} formRef={formRef} voivodeships={voivodeships} />
+      )}
+    </>
+  )
+}
+
+function FormBody({
+  state,
+  action,
+  pending,
+  formRef,
+  voivodeships,
+}: {
+  state: FormState
+  action: (formData: FormData) => void
+  pending: boolean
+  formRef: React.RefObject<HTMLFormElement | null>
+  voivodeships: Voivodeship[]
+}) {
   return (
     <form ref={formRef} action={action} noValidate className="space-y-5">
-      {/* Announced to assistive tech the moment a server error lands. */}
-      <div aria-live="polite" className="sr-only">
-        {state.status === 'error' ? state.message : ''}
-      </div>
-
       {state.status === 'error' && state.message ? (
         <p className="rounded-xl border border-red-700/30 bg-red-50 px-4 py-3 text-sm font-medium text-red-800">
           {state.message}

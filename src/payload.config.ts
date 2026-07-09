@@ -1,4 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -14,6 +15,7 @@ import { Pages } from './collections/Pages'
 import { Services } from './collections/Services'
 import { Users } from './collections/Users'
 import { Voivodeships } from './collections/Voivodeships'
+import { env, hasEmail } from './env'
 import { Settings } from './globals/Settings'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -24,15 +26,12 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
  * Supabase's transaction pooler (:6543) does not support prepared statements,
  * so DDL must not run over it. `pnpm migrate` sets DATABASE_USE_DIRECT=1, which
  * swaps in the session pooler (:5432). Runtime keeps the transaction pooler.
+ *
+ * Importing `./env` here is what makes AD-9's validation actually run: this
+ * module is loaded by the Next server, the Payload CLI and every migration.
  */
 const useDirect = process.env.DATABASE_USE_DIRECT === '1'
-const connectionString = useDirect ? process.env.DATABASE_DIRECT_URL : process.env.DATABASE_URL
-
-if (!connectionString) {
-  throw new Error(
-    `Missing ${useDirect ? 'DATABASE_DIRECT_URL' : 'DATABASE_URL'}. See AD-2 and docs/internal/credentials.md.`,
-  )
-}
+const connectionString = useDirect ? env.DATABASE_DIRECT_URL : env.DATABASE_URL
 
 export default buildConfig({
   admin: {
@@ -60,7 +59,7 @@ export default buildConfig({
   globals: [Settings],
 
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: env.PAYLOAD_SECRET,
 
   db: postgresAdapter({
     pool: { connectionString },
@@ -71,6 +70,25 @@ export default buildConfig({
 
     migrationDir: path.resolve(dirname, 'db/migrations'),
   }),
+
+  /**
+   * AD-8: without an adapter, `sendEmail` logs to the console and resolves —
+   * so the contact form would mark every lead delivered while nobody was told.
+   * When SMTP is unconfigured we leave `email` unset and the action records the
+   * truth against the lead instead.
+   */
+  email: hasEmail
+    ? nodemailerAdapter({
+        defaultFromAddress: env.SMTP_FROM!,
+        defaultFromName: 'IZI Serwis',
+        transportOptions: {
+          host: env.SMTP_HOST!,
+          port: env.SMTP_PORT ?? 587,
+          secure: (env.SMTP_PORT ?? 587) === 465,
+          auth: { user: env.SMTP_USER!, pass: env.SMTP_PASS! },
+        },
+      })
+    : undefined,
 
   sharp,
 

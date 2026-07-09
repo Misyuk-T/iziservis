@@ -61,6 +61,47 @@ SECURITY` is deliberately *not* set, as it would break the CMS.
 Also: the direct connection host `db.<ref>.supabase.co` does not resolve on this
 project. The session pooler stands in for it. See AD-2.
 
+## What an adversarial review found afterwards
+
+An independent review pass over the finished code found six real defects. All
+are fixed; each is worth remembering because none would have shown up in a
+screenshot.
+
+1. **The contact form emailed nobody, and said it had.** No SMTP adapter was
+   configured, and Payload's `sendEmail` does not throw without one — it logs
+   and resolves. Every lead was stamped `deliveredAt` while the advisor inbox
+   received nothing. Now the absence of a transport is recorded against the
+   lead, and a nodemailer adapter engages the moment `SMTP_*` is set.
+
+2. **`src/env.ts` was imported nowhere, so none of its validation ran.** Worse,
+   `payload.config.ts` had `secret: process.env.PAYLOAD_SECRET || ''` — with the
+   variable unset, the admin booted with an empty JWT signing key. It is now
+   imported from the config, which every server context loads, and the fallback
+   is gone.
+
+3. **`POST /api/leads` was open to the public.** `create: () => true` on the
+   collection let anyone write straight to the table, skipping the honeypot and
+   the schema. A bot was persisted during the review. Closed; the server action
+   reaches the collection through the Local API, which bypasses access control.
+
+4. **Every slashed legacy URL took two hops.** All 22 legacy WordPress URLs
+   ended in a slash. Next's trailing-slash normalisation fired a 308 first, then
+   our 301 ran. The unit test asserting "single hop" only walked an in-memory
+   map and never made a request. Fixed with `skipTrailingSlashRedirect` and
+   explicit slashed sources; there is now an HTTP-level test for all 44 variants.
+
+5. **`findByID` throws on a missing id**, so an unknown voivodeship skipped the
+   notification entirely — the precise "dropped, never delivered" outcome FR-14
+   forbids. `disableErrors: true` restores the fallback path.
+
+6. **`robots.txt` returned a 404.** `robots.ts` sat inside the `(site)` route
+   group, where Next silently does not emit it. AD-10's claim that `/admin` is
+   disallowed to crawlers was false for the whole session.
+
+The pattern worth noting: four of the six were places where a comment or a test
+asserted something the code did not do. Tests that check a data structure rather
+than the running system are the most expensive kind of false confidence.
+
 ## Risks
 
 - **The e2e suite writes to the production database.** `.env` points at the live
@@ -69,8 +110,12 @@ project. The session pooler stands in for it. See AD-2.
   database before anyone runs the suite in CI.
 - **The database password was pasted into a chat transcript.** Rotate it. See
   `docs/internal/credentials.md`, which is gitignored.
-- **No email adapter is configured.** Lead notifications are written to the
-  console. AD-8 means no lead is lost, but nobody is being notified either.
+- **No SMTP credentials yet.** The adapter is wired; set `SMTP_HOST`,
+  `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` and notifications start flowing. Until
+  then every lead is persisted and carries `deliveryError` saying so.
+- **No rate limiting on the contact form.** The REST surface is closed and the
+  honeypot works, but a determined bot can still submit through the server
+  action. Needed before launch.
 
 ## Deliberately not built
 

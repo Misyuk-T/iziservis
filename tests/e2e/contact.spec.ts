@@ -40,12 +40,16 @@ test('a valid submission is accepted and confirmed', async ({ page }) => {
 
   await page.getByRole('button', { name: /Wyślij zgłoszenie/i }).click()
 
-  const confirmation = page.getByRole('status')
-  await expect(confirmation).toBeVisible({ timeout: 15_000 })
-  await expect(confirmation).toContainText('zgłoszenie przyjęte')
+  // The visible panel.
+  const heading = page.getByRole('heading', { name: /zgłoszenie przyjęte/i })
+  await expect(heading).toBeVisible({ timeout: 15_000 })
 
-  // FR-7: the confirmation takes focus so a screen-reader user knows it landed.
-  await expect(confirmation).toBeFocused()
+  // The live region is mounted from first paint and filled on success, so a
+  // screen reader hears the change rather than a freshly-inserted node.
+  await expect(page.getByRole('status')).toContainText('Zgłoszenie przyjęte')
+
+  // FR-7: the panel also takes focus, so the announcement cannot be missed.
+  await expect(heading.locator('..')).toBeFocused()
 })
 
 test('server-side validation rejects a missing consent and says why', async ({ page }) => {
@@ -58,7 +62,7 @@ test('server-side validation rejects a missing consent and says why', async ({ p
   await expect(page.getByText('Zgoda jest wymagana', { exact: false })).toBeVisible({
     timeout: 15_000,
   })
-  await expect(page.getByRole('status')).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: /zgłoszenie przyjęte/i })).toHaveCount(0)
 })
 
 test('validation errors move focus to the first invalid field', async ({ page }) => {
@@ -78,6 +82,8 @@ test('the honeypot silently accepts a bot without persisting it', async ({ page 
   await page.locator('input[name="website"]').fill('http://spam.example')
   await page.getByRole('button', { name: /Wyślij zgłoszenie/i }).click()
 
-  // A bot must learn nothing from the response.
-  await expect(page.getByRole('status')).toBeVisible({ timeout: 15_000 })
+  // A bot must learn nothing from the response: it looks exactly like success.
+  await expect(page.getByRole('heading', { name: /zgłoszenie przyjęte/i })).toBeVisible({
+    timeout: 15_000,
+  })
 })

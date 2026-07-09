@@ -13,9 +13,28 @@ const nextConfig: NextConfig = {
     localPatterns: [{ pathname: '/api/media/file/**' }],
   },
 
-  // AD-6: the redirect map is data, defined once and covered by tests.
-  redirects: async () =>
-    redirects.map(({ from, to }) => ({ source: from, destination: to, permanent: true })),
+  /**
+   * AD-6, and the reason this is not the default.
+   *
+   * Every legacy WordPress URL ended in a slash. With Next's built-in trailing
+   * slash handling, `/uslugi/co-naprawiamy/` took *two* hops: a 308 to strip
+   * the slash, then our 301 to `/urzadzenia`. Two hops on exactly the 22 URLs
+   * AD-6 exists to protect.
+   *
+   * So we skip Next's normalization and own it: each redirect is emitted for
+   * both the bare and slashed source, and a final catch-all strips the slash
+   * from everything else. One hop, always.
+   */
+  skipTrailingSlashRedirect: true,
+
+  redirects: async () => [
+    ...redirects.flatMap(({ from, to }) => [
+      { source: from, destination: to, statusCode: 301 as const },
+      { source: `${from}/`, destination: to, statusCode: 301 as const },
+    ]),
+    // Everything else: strip the trailing slash in a single 301.
+    { source: '/:path+/', destination: '/:path+', statusCode: 301 as const },
+  ],
 
   async headers() {
     return [

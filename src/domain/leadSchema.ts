@@ -5,9 +5,14 @@ import { z } from 'zod'
  * the route handler re-validates because client validation is a convenience,
  * never a control.
  *
- * FR-16: no CAPTCHA. A honeypot plus server-side rate limiting is enough at
- * this traffic volume, and a visual challenge would exclude exactly the users
- * FR-7 exists to include.
+ * FR-16: no CAPTCHA. A visual challenge would exclude exactly the users FR-7
+ * exists to include.
+ *
+ * What guards the form today is the honeypot below plus a closed REST surface
+ * (`create: () => false` on the Leads collection, so the server action is the
+ * only way in). Rate limiting is **not** implemented — an earlier version of
+ * this comment claimed it was. Track it before launch; a determined bot can
+ * still submit through the action.
  */
 export const leadSchema = z.object({
   name: z.string().trim().min(2, 'Podaj imię i nazwisko'),

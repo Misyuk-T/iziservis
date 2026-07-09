@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import { legacyPaths, redirects, resolveRedirect } from '@/domain/redirects'
 
+/**
+ * This file checks the *shape of the map*. It does not prove what the server
+ * does — it passed happily while every slashed legacy URL took two hops over
+ * HTTP, because Next's trailing-slash normalisation fired before our redirects.
+ * `tests/e2e/redirects.spec.ts` is the one that tests reality.
+ */
 describe('AD-6: the redirect map preserves every indexed URL', () => {
   it('records all 22 legacy paths', () => {
     expect(legacyPaths).toHaveLength(22)

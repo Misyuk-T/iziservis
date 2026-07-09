@@ -6,6 +6,7 @@ import config from '@payload-config'
 
 import { COMPANY } from '@/domain/company'
 import { isBot, leadSchema } from '@/domain/leadSchema'
+import { hasEmail } from '@/env'
 
 export type FormState = {
   status: 'idle' | 'success' | 'error'
@@ -88,11 +89,32 @@ export async function submitLead(_prev: FormState, formData: FormData): Promise<
   }
 
   // The lead is safe from here on. Delivery failure never fails the request.
+  //
+  // `deliveredAt` is only stamped when a notification genuinely left the
+  // building. Payload's sendEmail resolves happily with no adapter configured —
+  // it just logs — so stamping it unconditionally told staff a lead had been
+  // routed when nothing had been sent.
+  if (!hasEmail) {
+    await payload
+      .update({
+        collection: 'leads',
+        id: leadId,
+        data: { deliveryError: 'No SMTP transport configured; notification not sent.' },
+      })
+      .catch(() => {})
+
+    return { status: 'success' }
+  }
+
   try {
+    // `disableErrors` because findByID throws NotFound for an absent id, which
+    // would skip sendEmail entirely — the "dropped, never delivered" outcome
+    // FR-14 exists to prevent. A missing region falls back to the general inbox.
     const region = await payload.findByID({
       collection: 'voivodeships',
       id: voivodeshipId,
       depth: 0,
+      disableErrors: true,
     })
 
     const to = region?.advisorEmail || COMPANY.email
@@ -110,12 +132,6 @@ export async function submitLead(_prev: FormState, formData: FormData): Promise<
         parsed.data.message,
       ].join('\n'),
     })
-
-    await payload.update({
-      collection: 'leads',
-      id: leadId,
-      data: { deliveredAt: new Date().toISOString() },
-    })
   } catch (error) {
     // Record why, against the lead. Never log the lead's contents — only its id.
     const reason = error instanceof Error ? error.message : 'unknown'
@@ -124,7 +140,17 @@ export async function submitLead(_prev: FormState, formData: FormData): Promise<
     await payload
       .update({ collection: 'leads', id: leadId, data: { deliveryError: reason.slice(0, 250) } })
       .catch(() => {})
+
+    return { status: 'success' }
   }
+
+  // Stamped in its own step: if this write fails, the mail still went out, and
+  // an unstamped-but-delivered lead is better than a duplicate outreach.
+  await payload
+    .update({ collection: 'leads', id: leadId, data: { deliveredAt: new Date().toISOString() } })
+    .catch((error: unknown) => {
+      payload.logger.warn({ leadId, error }, 'lead delivered but deliveredAt not stamped')
+    })
 
   return { status: 'success' }
 }
