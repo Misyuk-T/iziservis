@@ -335,6 +335,10 @@ export interface Brand {
    */
   authorized?: boolean | null;
   /**
+   * Zaznacz wyłącznie wtedy, gdy IZI Serwis jest dystrybutorem tej marki. To oświadczenie prawne, niezależne od pola „Autoryzowany serwis” — nie wynika z niego i go nie implikuje. Ustaw dopiero po potwierdzeniu przez klienta (OQ-11).
+   */
+  distributor?: boolean | null;
+  /**
    * Opcjonalne. Bez logo marka renderuje się jako tekst. Po wgraniu obrazu alt jest wymagany (kolekcja Media).
    */
   logo?: (number | null) | Media;
@@ -400,7 +404,7 @@ export interface Lead {
   company: string;
   phone: string;
   voivodeship: number | Voivodeship;
-  topic: 'Serwis' | 'Przegląd' | 'Wycena' | 'Zapytanie ogólne';
+  topic: 'Serwis' | 'Przegląd' | 'Wycena' | 'Zakup / dobór sprzętu' | 'Zapytanie ogólne';
   message: string;
   /**
    * GDPR: zapisujemy fakt udzielenia zgody wraz ze zgłoszeniem. Bez zgody formularz nie przechodzi walidacji po stronie serwera.
@@ -623,6 +627,7 @@ export interface BrandsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
   authorized?: T;
+  distributor?: T;
   logo?: T;
   description?: T;
   landingPage?: T;

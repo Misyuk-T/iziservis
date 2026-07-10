@@ -24,7 +24,12 @@ export const leadSchema = z.object({
     .min(9, 'Podaj numer telefonu')
     .regex(/^[+0-9 ()-]+$/, 'Numer telefonu może zawierać tylko cyfry i znaki + ( ) -'),
   voivodeship: z.string().min(1, 'Wybierz województwo'),
-  topic: z.enum(['Serwis', 'Przegląd', 'Wycena', 'Zapytanie ogólne'], {
+  // The topic values here MUST stay in sync with the select `options` in
+  // src/collections/Leads.ts. They are two independent lists: this zod enum
+  // validates the server action, Payload's own select validates the create. If
+  // they diverge, a submission can pass zod here and then be rejected by
+  // Payload on create — losing a lead that the user was told would send.
+  topic: z.enum(['Serwis', 'Przegląd', 'Wycena', 'Zakup / dobór sprzętu', 'Zapytanie ogólne'], {
     message: 'Wybierz temat',
   }),
   message: z.string().trim().min(10, 'Opisz problem w co najmniej 10 znakach'),
@@ -45,4 +50,10 @@ export function isBot(formData: FormData): boolean {
 
 export type LeadInput = z.infer<typeof leadSchema>
 
-export const TOPICS = ['Serwis', 'Przegląd', 'Wycena', 'Zapytanie ogólne'] as const
+export const TOPICS = [
+  'Serwis',
+  'Przegląd',
+  'Wycena',
+  'Zakup / dobór sprzętu',
+  'Zapytanie ogólne',
+] as const

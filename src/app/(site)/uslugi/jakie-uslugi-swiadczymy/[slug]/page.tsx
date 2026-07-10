@@ -51,14 +51,22 @@ export default async function ServicePage({ params }: Params) {
       <Section>
         <Reveal>
           <Prose>
+            {/*
+              FR-19: this template renders all FOUR services, including the sales
+              service "Dobór i sprzedaż sprzętu". The prose is therefore kept
+              service-agnostic — the service-specific message is carried by the
+              summary, already rendered prominently as the PageHeader lead above.
+              No repair-only wording ("oryginalne części"), no invented facts:
+              no 24/7, no response-time promise, no statistics.
+            */}
             <p>
-              Realizujemy {service.title.toLowerCase()} dla restauracji, hoteli, stołówek i sieci
-              gastronomicznych. Pracujemy zgodnie z procedurami producentów, z dostępem do
-              oryginalnych części.
+              Współpracujemy z restauracjami, hotelami, stołówkami i sieciami gastronomicznymi na
+              terenie całej Polski. Zakres i termin ustalamy indywidualnie — opisz, czego
+              potrzebujesz, a wrócimy z konkretną propozycją.
             </p>
             <p>
-              Zakres i termin ustalamy indywidualnie — napisz, czego potrzebujesz, a wrócimy z
-              konkretną propozycją.
+              Działamy zgodnie z procedurami producentów. Skontaktuj się z nami telefonicznie lub
+              przez formularz, a doradzimy najlepsze rozwiązanie i przygotujemy wycenę.
             </p>
           </Prose>
         </Reveal>
@@ -66,7 +74,7 @@ export default async function ServicePage({ params }: Params) {
         <Reveal delay={0.1}>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonAnchor href={`tel:${COMPANY.phone}`}>Zadzwoń: {COMPANY.phoneDisplay}</ButtonAnchor>
-            <GhostLink href="/kontakt" className="text-green-900">Wyceń naprawę</GhostLink>
+            <GhostLink href="/kontakt" className="text-green-900">Napisz do nas</GhostLink>
           </div>
         </Reveal>
       </Section>

@@ -367,6 +367,46 @@ Realizes UJ-1.
 - Without this, no post-launch claim about SEO impact is falsifiable. See §9
   OQ-2.
 
+### 4.6 Sales and distribution path
+
+**Description.** The business sells and distributes equipment, not only
+services it — stated on five legacy pages (*"autoryzowany serwis i
+dystrybutor"*, *"doradztwo w doborze sprzętu"*) and confirmed by the client.
+Added 2026-07-10 after the gap analysis
+([gap-analysis-sales-2026-07-10.md](../../analysis/gap-analysis-sales-2026-07-10.md)).
+Quote-driven in v1; no catalog, no e-commerce (see OQ-10).
+
+**Functional Requirements:**
+
+#### FR-19: A buyer has a path
+
+A visitor who wants to buy or be advised on equipment can find the offer and
+submit an enquiry.
+
+**Consequences (testable):**
+- A "Dobór i sprzedaż sprzętu" service page exists and is reachable from the
+  services listing (it is a `Service` entry, not a new template).
+- The contact form's topic list includes `Zakup / dobór sprzętu`, persisted on
+  the lead like every other topic.
+- Brands carry a `distributor: boolean` distinct from `authorized` — the
+  legacy wording *"serwisowym i/lub dystrybutorem"* proves the sets differ. A
+  brand renders a distribution badge only when the flag is true. The flag is
+  seeded `false` for every brand until the client answers OQ-11; the UI must
+  therefore degrade gracefully when no brand carries it.
+
+#### FR-20: Social proof is restored
+
+The "Zaufali nam" client-logo block from the legacy homepage returns.
+
+**Consequences (testable):**
+- The block renders the client's own logo assets (NBP, Grycan, Nice To Fit
+  You, CFI Hotels, Hotel Afrodyta, Arigator, Dziurka od Klucza, Santorini)
+  with meaningful alt text on every logo.
+- The claim text is the legacy site's own (*"znane restauracje i hotele, jak i
+  duże instytucje publiczne"*), not invented.
+- Pending OQ-12 (permission confirmation) — flagged in code, shippable
+  content since the client already publishes these logos on the same domain.
+
 ## 5. Cross-Cutting NFRs
 
 - **Performance.** Core Web Vitals in the green for mobile field data: LCP
@@ -401,6 +441,8 @@ Realizes UJ-1.
 - Payload CMS covering pages, services, equipment categories, brands, FAQ
   entries, stats, media, voivodeship routing
 - Contact form with voivodeship routing and persistence
+- Sales enquiry path: "Dobór i sprzedaż" service page, form topic,
+  `distributor` brand flag (FR-19); "Zaufali nam" social proof (FR-20)
 - `LocalBusiness`, `Service`, `FAQPage`, `BreadcrumbList` structured data
 - GTM, GA4, Search Console, cookie consent
 - Redirect map
@@ -479,6 +521,15 @@ These block the content model or the copy. They belong to the client.
    which templates get design attention first.
 9. **OQ-9 — Contact-submission retention period?** Needed for GDPR compliance;
    assumed 24 months in §5.
+10. **OQ-10 — Sales scope.** Quote-driven enquiries (built, FR-19) or a product
+    catalog? Recommendation: no e-commerce in v1 — B2B equipment is
+    quote-driven; a catalog without prices is maintenance burden without
+    conversion evidence.
+11. **OQ-11 — Which brands are distributed** (vs serviced-only)? Blocks setting
+    `distributor` truthfully; all seeded `false` until answered.
+12. **OQ-12 — Client-logo reuse permission** for the "Zaufali nam" block. The
+    legacy site already publishes them; confirm anyway.
+13. **OQ-13 — Parts supply** — standalone offer or a service detail?
 
 ## 10. Constraints
 

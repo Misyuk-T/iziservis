@@ -12,6 +12,7 @@ export const ROUTES = [
   '/uslugi/jakie-uslugi-swiadczymy/przeglady-okresowe',
   '/uslugi/jakie-uslugi-swiadczymy/naprawy-awaryjne',
   '/uslugi/jakie-uslugi-swiadczymy/instalacje-i-deinstalacje',
+  '/uslugi/jakie-uslugi-swiadczymy/dobor-i-sprzedaz-sprzetu',
   '/uslugi/jakie-uslugi-swiadczymy/marki-naprawianego-sprzetu',
   '/uslugi/gdzie-naprawiamy',
   '/uslugi/serwis-unic',

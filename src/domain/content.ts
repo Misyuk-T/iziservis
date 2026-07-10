@@ -30,6 +30,9 @@ export type Brand = {
   name: string
   slug: string
   authorized: boolean
+  // AD-17 (FR-19): independent from `authorized`. Never inferred one from the
+  // other. Drives the "Dystrybucja" badge only when true.
+  distributor: boolean
   description?: string | null
   landingPage: boolean
 }

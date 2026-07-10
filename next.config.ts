@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       { pathname: '/api/media/file/**' },
       // /hero/** is the client's own photography, shipped statically in /public.
       { pathname: '/hero/**' },
+      // /zaufali/** are the client's own client logos, shipped statically in /public.
+      { pathname: '/zaufali/**' },
+      // /o-firmie/** is the client's own team photography, shipped statically in /public.
+      { pathname: '/o-firmie/**' },
     ],
   },
 

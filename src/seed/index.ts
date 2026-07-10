@@ -138,6 +138,25 @@ const SERVICES = [
     // here; the old URL 301s. See src/domain/redirects.ts.
     seo: { title: 'Instalacje i deinstalacje - Izi Serwis', description: 'Szybko i bez stresu' },
   },
+  {
+    // FR-19: the sales/distribution service page. Unlike the three above, this
+    // is a NEW page with no legacy URL, so its SEO title/description are
+    // authored here rather than carried over verbatim from the content
+    // inventory (AD-5 applies only to ported pages). Copy uses only claims the
+    // legacy site itself makes — FAQ: "doradzamy przy wyborze nowych urządzeń...
+    // ergonomię, parametry techniczne i budżet klienta"; homepage:
+    // "autoryzowany serwis i dystrybutor".
+    slug: 'dobor-i-sprzedaz-sprzetu',
+    order: 3,
+    title: 'Dobór i sprzedaż sprzętu',
+    summary:
+      'Doradzamy przy wyborze nowych urządzeń — ergonomia, parametry techniczne i budżet — i dostarczamy je jako dystrybutor wiodących marek.',
+    seo: {
+      title: 'Dobór i sprzedaż sprzętu gastronomicznego - Izi Serwis',
+      description:
+        'Doradztwo w doborze i sprzedaż profesjonalnego sprzętu gastronomicznego. Autoryzowany serwis i dystrybutor wiodących marek.',
+    },
+  },
 ]
 
 /**

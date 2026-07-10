@@ -121,6 +121,28 @@ than the running system are the most expensive kind of false confidence.
   fixed properly (config now allows `/hero/**`) rather than left as
   `unoptimized`.
 
+## Session 3 (2026-07-10, afternoon) — the sales gap
+
+The client confirmed the business also **sells** equipment. His own site said
+it on five pages; we had recorded it in the brief and modelled none of it.
+Full analysis: docs/planning/analysis/gap-analysis-sales-2026-07-10.md.
+Built (FR-19/FR-20, Opus subagents, Fable orchestrating):
+
+- 4th service page "Dobór i sprzedaż sprzętu" (authored SEO — no legacy URL),
+  contact-form topic "Zakup / dobór sprzętu", `brands.distributor` flag
+  (AD-17: independent from `authorized`, all false until OQ-11).
+- Homepage: "Jak działamy" 4-step process, dark sales teaser band, and the
+  restored "Zaufali nam" block — 8 real client logos (incl. Narodowy Bank
+  Polski, Grycan, Nice To Fit You) recovered from the legacy site's own
+  uploads. OQ-12 (logo permission) flagged in code.
+- o-firmie got the client's team photo.
+- AD-3 hardening: `payload run` scripts default to NODE_ENV=development and
+  had silently enabled Drizzle push against the live DB (a `dev` marker sits
+  in payload_migrations; CI `payload migrate` will need --force-accept-warning
+  once). Push now requires explicit PAYLOAD_PUSH=1.
+
+Full matrix after: 235 e2e + 68 unit green.
+
 ## Risks
 
 - **The e2e suite writes to the production database.** `.env` points at the live

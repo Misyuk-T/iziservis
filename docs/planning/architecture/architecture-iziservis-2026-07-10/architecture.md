@@ -223,6 +223,17 @@ bundle.
   standalone control, and 44×44 only for the controls a panicking visitor
   reaches for: the `tel:` links and the contact form's submit button.
 
+### AD-17 — Service and distribution authorization are separate facts
+
+- **Binds:** FR-2, FR-19
+- **Prevents:** the UI conflating "we are authorized to service this brand"
+  with "we distribute this brand" — legally distinct claims the legacy site
+  keeps apart with *"serwisowym i/lub dystrybutorem"*.
+- **Rule:** `brands.authorized` and `brands.distributor` are independent
+  booleans. No template may infer one from the other, and a distribution badge
+  renders only from `distributor`. Both default `false`; truth comes from the
+  client (OQ-11), never from inference.
+
 ## Consistency Conventions
 
 | Concern | Convention |
@@ -360,6 +371,8 @@ the legacy site violated, and each corresponds to an AD above.
 | FR-13 click depth | `src/app/(site)/urzadzenia` | AD-6 |
 | FR-14–FR-16 leads | `src/app/(site)/kontakt`, `src/collections/leads.ts` | AD-8 |
 | FR-17 analytics | consent gate + GTM | AD-12 |
+| FR-19 sales path | `services` seed, `leads.topic`, `brands.distributor` | AD-17, AD-8 |
+| FR-20 social proof | homepage block, `public/zaufali/*` static assets | AD-1 (alt), AD-15 |
 | FR-18 baseline | operational, pre-cutover | — |
 
 ## Deferred

@@ -50,10 +50,17 @@ export const Leads: CollectionConfig = {
       name: 'topic',
       type: 'select',
       required: true,
-      options: ['Serwis', 'Przegląd', 'Wycena', 'Zapytanie ogólne'].map((t) => ({
-        label: t,
-        value: t,
-      })),
+      // These options MUST stay in sync with the zod enum in
+      // src/domain/leadSchema.ts (TOPICS / leadSchema.topic). Payload validates
+      // the create against this list; the server action validates against zod.
+      // If the two diverge, a submission can pass zod and then be rejected here
+      // on create — silently losing a lead. Keep both edited together.
+      options: ['Serwis', 'Przegląd', 'Wycena', 'Zakup / dobór sprzętu', 'Zapytanie ogólne'].map(
+        (t) => ({
+          label: t,
+          value: t,
+        }),
+      ),
     },
     { name: 'message', type: 'textarea', required: true },
     {

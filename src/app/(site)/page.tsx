@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
 import { Carousel } from '@/components/ui/Carousel'
-import { ButtonAnchor, Container, GhostLink, Section } from '@/components/ui/Section'
+import { ButtonAnchor, ButtonLink, Container, GhostLink, Section } from '@/components/ui/Section'
 import { COMPANY } from '@/domain/company'
 import { getBrands, getEquipmentCategories } from '@/domain/content'
 import { buildLocalBusinessSchema } from '@/domain/schema/localBusiness'
@@ -15,6 +15,40 @@ export const metadata: Metadata = {
   description: 'IZI Serwis – serwis urządzeń gastronomicznych, któremu możesz zaufać!',
   alternates: { canonical: '/' },
 }
+
+/**
+ * "Jak działamy" — the quote-driven flow. Every claim is source-checked:
+ *   1. mirrors the trust card (regional advisor, faq.json §Lokalizacje) plus the
+ *      phone/form intake the /kontakt form provides;
+ *   2–4. the diagnose → quote → repair sequence the whole site is built on:
+ *      the "Wyceń naprawę" hero CTA, the dark CTA's "ile będzie kosztować", and
+ *      faq.json "Zawsze informujemy o opłacalności naprawy".
+ * No response times and no warranty promises — none are sourced.
+ */
+const PROCESS_STEPS = [
+  { n: '1', title: 'Zgłoszenie', body: 'Telefon lub formularz — zgłoszenie trafia do doradcy Twojego regionu.' },
+  { n: '2', title: 'Diagnoza', body: 'Technik ustala przyczynę usterki.' },
+  { n: '3', title: 'Wycena i akceptacja', body: 'Otrzymujesz koszt naprawy przed rozpoczęciem prac.' },
+  { n: '4', title: 'Naprawa', body: 'Przywracamy kuchnię do pracy.' },
+] as const
+
+/**
+ * FR-20 client logos. Assets are the client's own, already published on
+ * iziserwis.pl. Dimensions are the real files (no CLS). Alt text was written
+ * after looking at each PNG, so it names the mark that is actually there.
+ * OQ-12 (logo-reuse permission) is pending — shippable because the client
+ * already publishes these same logos on the same domain.
+ */
+const CLIENT_LOGOS = [
+  { src: '/zaufali/nbp.png', alt: 'Logo Narodowy Bank Polski', width: 360, height: 248 },
+  { src: '/zaufali/grycan.png', alt: 'Logo Grycan – lody od pokoleń', width: 480, height: 141 },
+  { src: '/zaufali/nice-fit.png', alt: 'Logo Nice To Fit You', width: 360, height: 248 },
+  { src: '/zaufali/cvi.png', alt: 'Logo CFI Hotels Group', width: 360, height: 248 },
+  { src: '/zaufali/hotel.png', alt: 'Logo Hotel Afrodyta Business & Spa', width: 360, height: 248 },
+  { src: '/zaufali/arigator.png', alt: 'Logo Arigator Ramen Shop', width: 360, height: 248 },
+  { src: '/zaufali/dziurka-od-klucza.png', alt: 'Logo restauracji Dziurka od Klucza', width: 360, height: 248 },
+  { src: '/zaufali/santorini.png', alt: 'Logo restauracji Santorini', width: 360, height: 248 },
+] as const
 
 export default async function HomePage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://iziserwis.pl'
@@ -180,6 +214,41 @@ export default async function HomePage() {
       </Section>
 
       {/*
+        "Jak działamy" — the four-step, quote-driven flow (PROCESS_STEPS above
+        carries the source-check for each claim). Below the fold, so Reveal is
+        allowed. `!pt-0` tucks it under "Co naprawiamy" on that section's bottom
+        padding, the same rhythm the carousel below uses.
+      */}
+      <Section className="!pt-0">
+        <Reveal>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Jak działamy</h2>
+          <p className="mt-3 max-w-xl text-pretty text-muted">
+            Od zgłoszenia po powrót kuchni do pracy — w czterech krokach, bez niespodzianek.
+          </p>
+        </Reveal>
+
+        <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {PROCESS_STEPS.map((step) => (
+            <RevealItem
+              key={step.n}
+              className="flex h-full flex-col rounded-2xl border border-green-900/10 p-6 sm:p-8"
+            >
+              {/*
+                Display numeral in brand-green. brand-green is 3.4:1 on the page
+                canvas — under the 4.5:1 bar for body text, but this is bold
+                display text at text-5xl (48px), so WCAG 2.2 §1.4.3 grants the
+                large-text 3:1 exemption (same rule the hero's "gastronomicznych"
+                relies on). Never use text-brand-green below display size.
+              */}
+              <span className="text-5xl font-bold leading-none text-brand-green">{step.n}</span>
+              <h3 className="mt-5 text-xl font-semibold text-green-900">{step.title}</h3>
+              <p className="mt-2 text-pretty text-sm leading-relaxed text-muted">{step.body}</p>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </Section>
+
+      {/*
         A carousel, not a wrapping grid, because on a phone nine wordmarks
         stacked two-wide push the call to action a screen and a half down. It
         has no autoplay: WCAG 2.2.2 would then owe a pause control, and a logo
@@ -212,6 +281,73 @@ export default async function HomePage() {
             </div>
           ))}
         </Carousel>
+      </Section>
+
+      {/*
+        FR-19 / PRD §4.6: the sales-and-distribution path, surfaced on the
+        homepage. Copy is source-checked — the advisory claim is faq.json
+        ("doradzamy przy wyborze nowych urządzeń … ergonomia, parametry
+        techniczne i budżet"); "dystrybutor wiodących marek" is the legacy
+        homepage wording, also carried by src/seed/index.ts's
+        dobor-i-sprzedaz-sprzetu service. Quote-driven, no catalog or prices
+        (OQ-10). Secondary text on this dark band uses text-muted-on-dark.
+      */}
+      <Section dark>
+        <Reveal>
+          <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                Nie tylko serwis — dobór i sprzedaż sprzętu
+              </h2>
+              <p className="mt-3 max-w-2xl text-pretty text-muted-on-dark">
+                Doradzamy przy wyborze nowych urządzeń — ergonomia, parametry techniczne i budżet —
+                i jesteśmy dystrybutorem wiodących marek.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/uslugi/jakie-uslugi-swiadczymy/dobor-i-sprzedaz-sprzetu">
+                Dobór i sprzedaż sprzętu
+              </ButtonLink>
+              <GhostLink href="/kontakt">Zapytaj o urządzenie</GhostLink>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      {/*
+        FR-20: "Zaufali nam" restored from the legacy homepage. The claim
+        sentence is the legacy site's own, not invented; the logos are the
+        client's own assets (CLIENT_LOGOS above). Bordered cards echo the brand
+        carousel; each logo is next/image with real width/height (no CLS) and
+        lazy-loaded (below the fold).
+      */}
+      <Section>
+        <Reveal>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Zaufali nam</h2>
+          <p className="mt-3 max-w-2xl text-pretty text-muted">
+            Od początku istnienia IZI Serwis zaufały nam zarówno znane restauracje i hotele, jak i
+            duże instytucje publiczne.
+          </p>
+        </Reveal>
+
+        <RevealGroup className="mt-12 grid grid-cols-2 gap-5 lg:grid-cols-4">
+          {CLIENT_LOGOS.map((logo) => (
+            <RevealItem
+              key={logo.src}
+              className="flex min-h-28 items-center justify-center rounded-2xl border border-green-900/10 p-6"
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                loading="lazy"
+                sizes="(min-width: 1024px) 22vw, 45vw"
+                className="h-auto w-full max-w-44 object-contain"
+              />
+            </RevealItem>
+          ))}
+        </RevealGroup>
       </Section>
 
       <Section dark className="!py-16 lg:!py-20">

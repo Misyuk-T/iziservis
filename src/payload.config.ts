@@ -65,8 +65,13 @@ export default buildConfig({
     pool: { connectionString },
 
     // AD-3: push mode never touches production. Payload's own docs warn that
-    // mixing push with `migrate` corrupts state.
-    push: process.env.NODE_ENV === 'development' && !useDirect,
+    // mixing push with `migrate` corrupts schema state. The trap: `payload run`
+    // scripts default NODE_ENV=development, so the old `NODE_ENV === development`
+    // guard silently enabled Drizzle push against the live database — it already
+    // left a dev-push marker in payload_migrations. So require an explicit
+    // opt-in as well: a future local/test DB can set PAYLOAD_PUSH=1, nothing
+    // else does.
+    push: process.env.NODE_ENV === 'development' && process.env.PAYLOAD_PUSH === '1' && !useDirect,
 
     migrationDir: path.resolve(dirname, 'db/migrations'),
   }),

@@ -30,6 +30,21 @@ export const Brands: CollectionConfig = {
       },
     },
     {
+      // AD-17 (FR-19): distribution authorization is a fact independent from
+      // service authorization. `distributor` is NOT inferred from `authorized`
+      // and vice versa — the legacy wording "serwisowym i/lub dystrybutorem"
+      // proves the two sets differ. Seeded false for every brand until the
+      // client answers OQ-11.
+      name: 'distributor',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Dystrybucja',
+      admin: {
+        description:
+          'Zaznacz wyłącznie wtedy, gdy IZI Serwis jest dystrybutorem tej marki. To oświadczenie prawne, niezależne od pola „Autoryzowany serwis” — nie wynika z niego i go nie implikuje. Ustaw dopiero po potwierdzeniu przez klienta (OQ-11).',
+      },
+    },
+    {
       name: 'logo',
       type: 'upload',
       relationTo: 'media',
