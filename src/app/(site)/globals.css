@@ -6,8 +6,8 @@
  *
  * WCAG 2.2 §2.3.3 (Animation from Interactions) and §2.2.2 (Pause, Stop, Hide).
  * Everything below collapses to instant when the visitor asks for reduced
- * motion — including the Lenis smooth scroll, which is disabled outright in
- * SmoothScrollProvider rather than merely sped up.
+ * motion. Motion here means reveals, hover transitions, and the Embla carousel
+ * only — scrolling itself is 100% native, driven by the browser.
  */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -38,9 +38,31 @@
   --header-h: 4rem;
 }
 
+/*
+ * Branded scrollbar, native scrolling. Standard properties for Firefox, the
+ * ::-webkit- pseudo-elements for Chromium/Safari. Colours come straight from
+ * the design tokens (AD-7/AD-14: no hex literals here).
+ */
 html {
-  /* Lenis drives scrolling; native smooth would fight it. */
-  scroll-behavior: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-action-green) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-action-green);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-link-green);
 }
 
 body {
