@@ -59,7 +59,7 @@ export function Carousel({
               aria-label={`${i + 1} z ${children.length}`}
               // Before Embla initialises, `inView` is empty — do not inert everything.
               inert={inView.length > 0 && !inView.includes(i)}
-              className="min-w-0 shrink-0 grow-0 basis-1/2 sm:basis-1/3 lg:basis-1/5"
+              className="min-w-0 shrink-0 grow-0 basis-1/2 sm:basis-1/3 lg:basis-1/4"
             >
               {child}
             </div>

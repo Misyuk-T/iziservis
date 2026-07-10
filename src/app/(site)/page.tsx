@@ -41,14 +41,43 @@ const PROCESS_STEPS = [
  */
 const CLIENT_LOGOS = [
   { src: '/zaufali/nbp.png', alt: 'Logo Narodowy Bank Polski', width: 360, height: 248 },
+  { src: '/zaufali/hampton.png', alt: 'Logo Hampton by Hilton', width: 360, height: 232 },
+  { src: '/zaufali/tchibo.png', alt: 'Logo Tchibo', width: 360, height: 360 },
   { src: '/zaufali/grycan.png', alt: 'Logo Grycan – lody od pokoleń', width: 480, height: 141 },
   { src: '/zaufali/nice-fit.png', alt: 'Logo Nice To Fit You', width: 360, height: 248 },
   { src: '/zaufali/cvi.png', alt: 'Logo CFI Hotels Group', width: 360, height: 248 },
+  { src: '/zaufali/arche-lochow.png', alt: 'Logo Pałac i Folwark Arche Łochów', width: 224, height: 224 },
   { src: '/zaufali/hotel.png', alt: 'Logo Hotel Afrodyta Business & Spa', width: 360, height: 248 },
   { src: '/zaufali/arigator.png', alt: 'Logo Arigator Ramen Shop', width: 360, height: 248 },
   { src: '/zaufali/dziurka-od-klucza.png', alt: 'Logo restauracji Dziurka od Klucza', width: 360, height: 248 },
   { src: '/zaufali/santorini.png', alt: 'Logo restauracji Santorini', width: 360, height: 248 },
 ] as const
+
+/**
+ * Category icons (FR-13). Mapped by slug because Supabase Storage isn't wired
+ * yet — the CMS `icon` field on equipment-categories exists for later, but until
+ * a media pipeline backs it these are the client's own legacy line-art assets
+ * shipped statically in /public/icons. Each is decorative (the card title next
+ * to it carries the meaning), so it renders with alt="". Slugs that have no icon
+ * (the service pages) simply render no image.
+ */
+const CATEGORY_ICONS: Record<string, string> = {
+  'piece-konwekcyjno-parowe': '/icons/piece.png',
+  'zmywarki-gastronomiczne': '/icons/zmywarki.png',
+  'ekspresy-i-urzadzenia-barowe': '/icons/ekspresy.png',
+  'urzadzenia-chlodnicze': '/icons/chlodnicze.png',
+  'urzadzenia-grzewcze': '/icons/grzewcze.png',
+}
+
+/**
+ * The bento feature card. The piece-konwekcyjno-parowe page is the highest-value
+ * money page, so on lg it spans two columns and carries one extra descriptive
+ * sentence. The sentence is scope, not an unsourced promise (no times, no
+ * warranty claims — see the PROCESS_STEPS source-check note).
+ */
+const FEATURED_SLUG = 'piece-konwekcyjno-parowe'
+const FEATURED_EXTRA =
+  'Serce każdej profesjonalnej kuchni — od diagnostyki elektroniki po wymianę uszczelek i kalibrację komory.'
 
 export default async function HomePage() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://iziserwis.pl'
@@ -84,7 +113,7 @@ export default async function HomePage() {
         stacking context), lifted with `relative z-10` + `shadow-xl`.
       */}
       <section className="relative isolate">
-        <Container className="grid items-center gap-10 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-28 lg:pt-20">
+        <Container className="grid items-center gap-10 pb-20 pt-12 sm:pb-24 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-32 lg:pt-20">
           <div>
             {/* Green-outlined pill; label in link-green (AAA on the canvas), dot decorative. */}
             <p className="inline-flex items-center gap-2 rounded-full border border-brand-green px-4 py-1.5 text-sm font-semibold text-link-green">
@@ -171,7 +200,17 @@ export default async function HomePage() {
           the card's bg-page (NOT on mist, where brand-green is a banned 2.98:1),
           aria-hidden, no icon library.
         */}
-        <div className="relative z-10 -mt-10 sm:-mt-14">
+        {/*
+          Straddle the seam with a TRANSFORM, not a negative margin. The band
+          runs `!pt-0` so nothing fights the lift — but that also removes the top
+          padding that would stop a negative `margin-top` from collapsing THROUGH
+          the section and dragging the mist background up with the card (which is
+          exactly what left it flush at the seam before). `translate-y` moves only
+          the paint, not the box, so the mist band stays put and the card floats
+          half over the hero's white, half over the mist. No overflow-hidden
+          ancestor clips the shadow, which now reads on both backgrounds.
+        */}
+        <div className="relative z-10 -translate-y-12 sm:-translate-y-16 lg:-translate-y-20">
           <RevealGroup className="grid gap-6 rounded-2xl border border-green-900/10 bg-page p-6 shadow-xl sm:grid-cols-3 sm:gap-8 sm:p-8">
             <RevealItem className="flex items-start gap-4">
               <MapPinIcon />
@@ -199,8 +238,13 @@ export default async function HomePage() {
           </RevealGroup>
         </div>
 
-        {/* FR-13: the five money pages, one click from the homepage. */}
-        <div className="pt-16 sm:pt-20 lg:pt-24">
+        {/*
+          FR-13: the five money pages, one click from the homepage. The pt here
+          is deliberately modest — the trust card's `translate-y` already leaves
+          its lifted-off height as breathing room above this block, so pt + that
+          lift together give the generous seam-to-content gap without a chasm.
+        */}
+        <div className="pt-6 sm:pt-8 lg:pt-10">
           <Reveal>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Co naprawiamy</h2>
             {/* Heading (green-900, 14.9:1) and lead (muted, 5.99:1) sit directly on mist — both clear AA. */}
@@ -209,30 +253,59 @@ export default async function HomePage() {
             </p>
           </Reveal>
 
+          {/*
+            Bento, not a parade: the featured money page (piece-konwekcyjno-
+            parowe) spans two columns on lg with a larger icon and one extra
+            sentence; the other four are regular cards in the 3-col grid, so the
+            top row reads 2+1 and the bottom row 3 — no empty cell. Every card
+            carries its category icon (client's own legacy line-art, decorative
+            alt=""), which is what stops the block from being text-only.
+          */}
           <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category) => (
-              <RevealItem key={category.slug}>
-                {/* bg-page so the card pops off the mist band (and keeps the link-green CTA on white). */}
-                <Link
-                  href={`/urzadzenia/${category.slug}`}
-                  className="group flex h-full flex-col rounded-2xl border border-green-900/10 bg-page p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
-                >
-                  <h3 className="text-xl font-semibold text-green-900">{category.title}</h3>
-                  <p className="mt-3 grow text-pretty text-sm leading-relaxed text-muted">
-                    {category.summary}
-                  </p>
-                  <span className="mt-6 text-sm font-semibold text-link-green">
-                    Zobacz serwis
-                    <span
-                      className="ml-1 inline-block transition-transform duration-300 motion-safe:group-hover:translate-x-1"
-                      aria-hidden="true"
-                    >
-                      →
+            {categories.map((category) => {
+              const isFeatured = category.slug === FEATURED_SLUG
+              const icon = CATEGORY_ICONS[category.slug]
+              return (
+                <RevealItem key={category.slug} className={isFeatured ? 'lg:col-span-2' : undefined}>
+                  {/* bg-page so the card pops off the mist band (and keeps the link-green CTA on white). */}
+                  <Link
+                    href={`/urzadzenia/${category.slug}`}
+                    className="group flex h-full flex-col rounded-2xl border border-green-900/10 bg-page p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
+                  >
+                    {icon ? (
+                      <Image
+                        src={icon}
+                        alt=""
+                        width={isFeatured ? 80 : 64}
+                        height={isFeatured ? 80 : 64}
+                        loading="lazy"
+                        className={isFeatured ? 'mb-5 size-20' : 'mb-4 size-16'}
+                      />
+                    ) : null}
+                    <h3 className={`font-semibold text-green-900 ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
+                      {category.title}
+                    </h3>
+                    <p className="mt-3 text-pretty text-sm leading-relaxed text-muted">
+                      {category.summary}
+                    </p>
+                    {isFeatured ? (
+                      <p className="mt-2 max-w-md text-pretty text-sm leading-relaxed text-muted">
+                        {FEATURED_EXTRA}
+                      </p>
+                    ) : null}
+                    <span className="mt-auto pt-6 text-sm font-semibold text-link-green">
+                      Zobacz serwis
+                      <span
+                        className="ml-1 inline-block transition-transform duration-300 motion-safe:group-hover:translate-x-1"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
                     </span>
-                  </span>
-                </Link>
-              </RevealItem>
-            ))}
+                  </Link>
+                </RevealItem>
+              )
+            })}
           </RevealGroup>
         </div>
       </Section>
@@ -240,8 +313,14 @@ export default async function HomePage() {
       {/*
         "Jak działamy" — the four-step, quote-driven flow (PROCESS_STEPS above
         carries the source-check for each claim). Below the fold, so Reveal is
-        allowed. Inverse of the band above: the section stays on the page canvas
-        while its cards are tinted (bg-mist), so the rhythm keeps alternating.
+        allowed. No card boxes: a connected timeline reads as a process, not a
+        grid of four identical rectangles (the "empty boxes" complaint). The
+        section stays on the page canvas so the numbered chips can be bg-mist
+        circles — and the numeral is LINK-green, the sanctioned 6.27:1 pairing
+        on mist (brand-green on mist is a banned 2.98:1; see tokens.ts and
+        tests/contrast/tokens.test.ts). The connector hairline is a non-text
+        border tint (green-900/10), horizontal across the chips on lg and a
+        vertical left-aligned rail below it.
       */}
       <Section>
         <Reveal>
@@ -251,23 +330,33 @@ export default async function HomePage() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {PROCESS_STEPS.map((step) => (
+        <RevealGroup className="relative mt-14 grid gap-y-8 lg:grid-cols-4 lg:gap-x-8">
+          {/* lg: one horizontal hairline linking the chip centres (chips sit on top). */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-[12.5%] top-7 hidden h-px bg-green-900/10 lg:block"
+          />
+          {PROCESS_STEPS.map((step, i) => (
             <RevealItem
               key={step.n}
-              className="flex h-full flex-col rounded-2xl border border-green-900/10 bg-mist p-6 sm:p-8"
+              className="relative flex items-start gap-4 lg:flex-col lg:items-center lg:gap-0 lg:text-center"
             >
-              {/*
-                Display numeral in LINK-green, not brand-green. The card surface
-                is now bg-mist, and brand-green on mist is 2.98:1 — banned even
-                for large display text (see tokens.ts `mist` note and the ban in
-                tests/contrast/tokens.test.ts). link-green (#29632C) is 6.27:1 on
-                mist, clearing AA outright at this size. Swapping the token is the
-                cleaner fix than wrapping each numeral in a bg-page chip.
-              */}
-              <span className="text-5xl font-bold leading-none text-link-green">{step.n}</span>
-              <h3 className="mt-5 text-xl font-semibold text-green-900">{step.title}</h3>
-              <p className="mt-2 text-pretty text-sm leading-relaxed text-muted">{step.body}</p>
+              {/* below lg: a vertical rail from this chip down to the next. */}
+              {i < PROCESS_STEPS.length - 1 ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-7 top-7 h-[calc(100%+2rem)] w-px -translate-x-1/2 bg-green-900/10 lg:hidden"
+                />
+              ) : null}
+              <span className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-mist text-2xl font-bold text-link-green">
+                {step.n}
+              </span>
+              <div className="lg:mt-5">
+                <h3 className="text-xl font-semibold text-green-900">{step.title}</h3>
+                <p className="mt-2 max-w-xs text-pretty text-sm leading-relaxed text-muted">
+                  {step.body}
+                </p>
+              </div>
             </RevealItem>
           ))}
         </RevealGroup>
@@ -294,15 +383,13 @@ export default async function HomePage() {
             // bg-page so the card (and its link-green "Autoryzowany serwis" label) reads on the mist band.
             <div
               key={brand.slug}
-              className="flex h-full min-h-32 flex-col justify-center rounded-2xl border border-green-900/10 bg-page p-5"
+              className="flex h-full min-h-[88px] flex-col items-center justify-center rounded-2xl border border-green-900/10 bg-page p-4 text-center"
             >
-              <span className="text-base font-semibold text-green-900">{brand.name}</span>
+              <span className="text-lg font-semibold text-green-900">{brand.name}</span>
               {brand.authorized ? (
-                <span className="mt-2 text-xs font-semibold text-link-green">
-                  Autoryzowany serwis
-                </span>
+                <span className="mt-1 text-xs font-semibold text-link-green">Autoryzowany serwis</span>
               ) : (
-                <span className="mt-2 text-xs text-muted">Marka partnerska</span>
+                <span className="mt-1 text-xs text-muted">Marka partnerska</span>
               )}
             </div>
           ))}
@@ -320,7 +407,15 @@ export default async function HomePage() {
       */}
       <Section dark>
         <Reveal>
-          <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+          {/*
+            The dark band was text-only. It now carries the client's own kitchen-
+            crew photo as a rounded image column on lg (text left, image right);
+            on mobile the image drops below the text at a capped 16/9. Copy and
+            CTAs are unchanged. The photo is decorative-adjacent but meaningful
+            here (it shows the professional-kitchen context the copy sells), so
+            it gets a real alt and lazy-loads well below the fold.
+          */}
+          <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-14">
             <div>
               <h2 className="text-2xl font-bold sm:text-3xl">
                 Nie tylko serwis — dobór i sprzedaż sprzętu
@@ -329,12 +424,22 @@ export default async function HomePage() {
                 Doradzamy przy wyborze nowych urządzeń — ergonomia, parametry techniczne i budżet —
                 i jesteśmy dystrybutorem wiodących marek.
               </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <ButtonLink href="/uslugi/jakie-uslugi-swiadczymy/dobor-i-sprzedaz-sprzetu">
+                  Dobór i sprzedaż sprzętu
+                </ButtonLink>
+                <GhostLink href="/kontakt">Zapytaj o urządzenie</GhostLink>
+              </div>
             </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/uslugi/jakie-uslugi-swiadczymy/dobor-i-sprzedaz-sprzetu">
-                Dobór i sprzedaż sprzętu
-              </ButtonLink>
-              <GhostLink href="/kontakt">Zapytaj o urządzenie</GhostLink>
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl lg:aspect-[4/3]">
+              <Image
+                src="/hero/kuchnia-zespol.jpg"
+                alt="Zespół kucharzy w profesjonalnej kuchni gastronomicznej"
+                fill
+                loading="lazy"
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </Reveal>
@@ -356,7 +461,7 @@ export default async function HomePage() {
           </p>
         </Reveal>
 
-        <RevealGroup className="mt-12 grid grid-cols-2 gap-5 lg:grid-cols-4">
+        <RevealGroup className="mt-12 grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4">
           {CLIENT_LOGOS.map((logo) => (
             <RevealItem
               key={logo.src}
@@ -368,8 +473,8 @@ export default async function HomePage() {
                 width={logo.width}
                 height={logo.height}
                 loading="lazy"
-                sizes="(min-width: 1024px) 22vw, 45vw"
-                className="h-auto w-full max-w-44 object-contain"
+                sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                className="max-h-16 w-full max-w-44 object-contain"
               />
             </RevealItem>
           ))}

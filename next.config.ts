@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
       { pathname: '/hero/**' },
       // /zaufali/** are the client's own client logos, shipped statically in /public.
       { pathname: '/zaufali/**' },
+      // /icons/** are the client's own category icons, shipped statically in /public.
+      { pathname: '/icons/**' },
       // /o-firmie/** is the client's own team photography, shipped statically in /public.
       { pathname: '/o-firmie/**' },
     ],
