@@ -12,21 +12,45 @@ export function Container({ children, className = '' }: { children: ReactNode; c
   return <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
 }
 
+/**
+ * Section rhythm (zebra banding): a page reads as separated blocks only if
+ * adjacent sections do not share one surface. `tone` picks that surface:
+ *   page — the #FEFEFE canvas (default, transparent — body paints it)
+ *   mist — the faint --color-mist band; dark text on it must be `muted` or
+ *          darker (AD-7: mist is `surface-under-dark-text`, brand-green banned)
+ *   dark — the green-900 hero surface, white text
+ *
+ * `dark` (boolean) is retained as a backwards-compatible alias for
+ * `tone="dark"` so pages that predate `tone` keep working; when both are set
+ * `tone` wins. New code should pass `tone`.
+ */
+type Tone = 'page' | 'mist' | 'dark'
+
+const toneClass: Record<Tone, string> = {
+  page: '',
+  mist: 'bg-mist',
+  dark: 'on-dark bg-green-900 text-text-on-dark',
+}
+
 export function Section({
   children,
   className = '',
+  tone,
   dark = false,
   id,
 }: {
   children: ReactNode
   className?: string
+  tone?: Tone
+  /** @deprecated pass `tone="dark"` instead. Alias kept for existing pages. */
   dark?: boolean
   id?: string
 }) {
+  const resolved: Tone = tone ?? (dark ? 'dark' : 'page')
   return (
     <section
       id={id}
-      className={`${dark ? 'on-dark bg-green-900 text-text-on-dark' : ''} py-16 sm:py-20 lg:py-24 ${className}`}
+      className={`${toneClass[resolved]} py-16 sm:py-20 lg:py-24 ${className}`}
     >
       <Container>{children}</Container>
     </section>

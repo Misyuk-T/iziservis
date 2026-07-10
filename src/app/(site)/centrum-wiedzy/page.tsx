@@ -48,7 +48,7 @@ export default async function KnowledgeCentrePage() {
                 */}
                 <div className="mt-5 divide-y divide-green-900/10 border-y border-green-900/10">
                   {group.entries.map((entry) => (
-                    <details key={entry.id} className="group py-1">
+                    <details key={entry.id} className="accordion group py-1">
                       <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-3 text-left font-medium text-green-900 [&::-webkit-details-marker]:hidden">
                         <span className="text-pretty">{entry.question}</span>
                         <span

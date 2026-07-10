@@ -18,6 +18,7 @@
  *
  * `usableAs` is the contract:
  *   surface-under-white-text — a background white body text sits on (4.5:1 vs textOnDark)
+ *   surface-under-dark-text  — a tinted surface dark body text sits on (4.5:1 vs the *weakest* dark text we allow, `muted`)
  *   text-on-light           — a foreground for body text on the page (4.5:1 vs pageBackground)
  *   text-on-dark            — a foreground for body text on any green surface (4.5:1 vs the lightest, green-700)
  *   nontext-only            — icons, borders, large display text (3:1)
@@ -25,6 +26,7 @@
 
 export type Usage =
   | 'surface-under-white-text'
+  | 'surface-under-dark-text'
   | 'text-on-light'
   | 'text-on-dark'
   | 'nontext-only'
@@ -88,6 +90,11 @@ export const tokens = {
     usableAs: ['text-on-dark'],
     note: 'Secondary body text on any green surface. 8.06:1 against the lightest (green-700).',
   },
+  mist: {
+    hex: '#EAF1EC',
+    usableAs: ['surface-under-dark-text'],
+    note: 'Faint green-grey banding surface for section rhythm. 1.14:1 vs the #FEFEFE page — visible separation, not a harsh block. Dark text sits directly on it: muted 5.99:1, link-green 6.27:1, green-900 14.9:1. But brand-green is only 2.98:1 on it (under even the 3:1 non-text bar), so brand-green icons/numerals/text must stay inside bg-page cards — never directly on mist.',
+  },
 } as const satisfies Record<string, Token>
 
 export type TokenName = keyof typeof tokens
@@ -113,6 +120,7 @@ export function contrastRatio(a: string, b: string): number {
 /** The threshold each usage owes, per WCAG 2.2 (1.4.3 text, 1.4.11 non-text). */
 export const thresholds: Record<Usage, number> = {
   'surface-under-white-text': 4.5,
+  'surface-under-dark-text': 4.5,
   'text-on-light': 4.5,
   'text-on-dark': 4.5,
   'nontext-only': 3,
@@ -121,6 +129,9 @@ export const thresholds: Record<Usage, number> = {
 /** What each usage is measured against. */
 export const reference: Record<Usage, string> = {
   'surface-under-white-text': textOnDark,
+  // The weakest (lightest) dark text we permit is `muted`; a tinted surface
+  // that clears 4.5:1 against it clears it for every darker text too.
+  'surface-under-dark-text': tokens.muted.hex,
   'text-on-light': pageBackground,
   'text-on-dark': lightestDarkSurface,
   'nontext-only': pageBackground,

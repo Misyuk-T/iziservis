@@ -87,6 +87,38 @@ body {
   outline-color: var(--color-text-on-dark);
 }
 
+/*
+ * Animated <details>, still a <details>.
+ *
+ * ::details-content is the browser's own box around everything after
+ * <summary>, so the panel animates without JS and without measuring heights.
+ * `interpolate-size` is what turns `auto` into a real transition endpoint, and
+ * `allow-discrete` sequences the content-visibility flip so the answer is
+ * painted for the whole open and stays painted for the whole close.
+ *
+ * A browser missing ::details-content or interpolate-size ignores every rule
+ * here and snaps open, which is exactly today's behaviour.
+ */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.accordion::details-content {
+  block-size: 0;
+  opacity: 0;
+  overflow: clip;
+  transition:
+    block-size 300ms var(--ease-out-soft),
+    opacity 200ms var(--ease-out-soft),
+    content-visibility 300ms var(--ease-out-soft);
+  transition-behavior: allow-discrete;
+}
+
+.accordion[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
 /* FR-8: the skip link is the first focusable element. */
 .skip-link {
   position: absolute;

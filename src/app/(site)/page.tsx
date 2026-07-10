@@ -71,8 +71,19 @@ export default async function HomePage() {
 
         The hero now sits on the page canvas (--color-page), not a dark surface:
         no `on-dark`, no DecorativeGrid.
+
+        ROOT CAUSE of the clipped trust-card shadow (client feedback): this
+        section used to carry `overflow-hidden`. The trust card overlaps the
+        hero's bottom edge with a negative margin, so its box-shadow extended
+        past the section box — and `overflow-hidden` sheared it off at the
+        section boundary (a hard edge on the sides that cross it, shadow intact
+        elsewhere). The clip was never needed here: the only thing that must be
+        clipped is the arch photo, which already clips itself via its own
+        `overflow-hidden` wrapper below. So the section-level clip is removed,
+        and the card now lives in the mist band below (its own un-clipped
+        stacking context), lifted with `relative z-10` + `shadow-xl`.
       */}
-      <section className="relative isolate overflow-hidden">
+      <section className="relative isolate">
         <Container className="grid items-center gap-10 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-28 lg:pt-20">
           <div>
             {/* Green-outlined pill; label in link-green (AAA on the canvas), dot decorative. */}
@@ -140,17 +151,28 @@ export default async function HomePage() {
             />
           </div>
         </Container>
+      </section>
 
+      {/*
+        ONE mist band: the floating trust card + "Co naprawiamy". The band is
+        the section separation the client asked for — the white card lands on
+        mist (not on white-on-white), and the equipment cards below get bg-page
+        so they pop off the tint. `!pt-0` lets the trust card's negative margin
+        lift it up over the hero seam without the band's top padding fighting it.
+      */}
+      <Section tone="mist" className="!pt-0">
         {/*
           Trust bar → floating white card overlapping the hero's bottom edge.
           The reference's four items include "24h" and "7 dni w tygodniu", both
           false (OQ-5); these three are the verified claims. This card sits at the
           fold boundary, not above the primary content, so it may animate.
-          Icons are inline outline SVGs, stroke in brand-green (nontext, 3:1 ok),
-          aria-hidden — no icon library.
+          `relative z-10` lifts it over the hero; `shadow-xl` reads on the mist.
+          Icons are inline outline SVGs, stroke in brand-green — 3:1 non-text on
+          the card's bg-page (NOT on mist, where brand-green is a banned 2.98:1),
+          aria-hidden, no icon library.
         */}
-        <Container className="relative z-10 -mt-10 sm:-mt-14">
-          <RevealGroup className="grid gap-6 rounded-2xl border border-green-900/10 bg-page p-6 shadow-lg sm:grid-cols-3 sm:gap-8 sm:p-8">
+        <div className="relative z-10 -mt-10 sm:-mt-14">
+          <RevealGroup className="grid gap-6 rounded-2xl border border-green-900/10 bg-page p-6 shadow-xl sm:grid-cols-3 sm:gap-8 sm:p-8">
             <RevealItem className="flex items-start gap-4">
               <MapPinIcon />
               <div>
@@ -175,51 +197,53 @@ export default async function HomePage() {
               </div>
             </RevealItem>
           </RevealGroup>
-        </Container>
-      </section>
+        </div>
 
-      {/* FR-13: the five money pages, one click from the homepage. */}
-      <Section>
-        <Reveal>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Co naprawiamy</h2>
-          <p className="mt-3 max-w-xl text-pretty text-muted">
-            Od pieca po kostkarkę — znamy każdy centymetr Twojego zaplecza.
-          </p>
-        </Reveal>
+        {/* FR-13: the five money pages, one click from the homepage. */}
+        <div className="pt-16 sm:pt-20 lg:pt-24">
+          <Reveal>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Co naprawiamy</h2>
+            {/* Heading (green-900, 14.9:1) and lead (muted, 5.99:1) sit directly on mist — both clear AA. */}
+            <p className="mt-3 max-w-xl text-pretty text-muted">
+              Od pieca po kostkarkę — znamy każdy centymetr Twojego zaplecza.
+            </p>
+          </Reveal>
 
-        <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <RevealItem key={category.slug}>
-              <Link
-                href={`/urzadzenia/${category.slug}`}
-                className="group flex h-full flex-col rounded-2xl border border-green-900/10 p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
-              >
-                <h3 className="text-xl font-semibold text-green-900">{category.title}</h3>
-                <p className="mt-3 grow text-pretty text-sm leading-relaxed text-muted">
-                  {category.summary}
-                </p>
-                <span className="mt-6 text-sm font-semibold text-link-green">
-                  Zobacz serwis
-                  <span
-                    className="ml-1 inline-block transition-transform duration-300 motion-safe:group-hover:translate-x-1"
-                    aria-hidden="true"
-                  >
-                    →
+          <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map((category) => (
+              <RevealItem key={category.slug}>
+                {/* bg-page so the card pops off the mist band (and keeps the link-green CTA on white). */}
+                <Link
+                  href={`/urzadzenia/${category.slug}`}
+                  className="group flex h-full flex-col rounded-2xl border border-green-900/10 bg-page p-6 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:border-brand-green/40 hover:shadow-lg sm:p-8"
+                >
+                  <h3 className="text-xl font-semibold text-green-900">{category.title}</h3>
+                  <p className="mt-3 grow text-pretty text-sm leading-relaxed text-muted">
+                    {category.summary}
+                  </p>
+                  <span className="mt-6 text-sm font-semibold text-link-green">
+                    Zobacz serwis
+                    <span
+                      className="ml-1 inline-block transition-transform duration-300 motion-safe:group-hover:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
                   </span>
-                </span>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+                </Link>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
       </Section>
 
       {/*
         "Jak działamy" — the four-step, quote-driven flow (PROCESS_STEPS above
         carries the source-check for each claim). Below the fold, so Reveal is
-        allowed. `!pt-0` tucks it under "Co naprawiamy" on that section's bottom
-        padding, the same rhythm the carousel below uses.
+        allowed. Inverse of the band above: the section stays on the page canvas
+        while its cards are tinted (bg-mist), so the rhythm keeps alternating.
       */}
-      <Section className="!pt-0">
+      <Section>
         <Reveal>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Jak działamy</h2>
           <p className="mt-3 max-w-xl text-pretty text-muted">
@@ -231,16 +255,17 @@ export default async function HomePage() {
           {PROCESS_STEPS.map((step) => (
             <RevealItem
               key={step.n}
-              className="flex h-full flex-col rounded-2xl border border-green-900/10 p-6 sm:p-8"
+              className="flex h-full flex-col rounded-2xl border border-green-900/10 bg-mist p-6 sm:p-8"
             >
               {/*
-                Display numeral in brand-green. brand-green is 3.4:1 on the page
-                canvas — under the 4.5:1 bar for body text, but this is bold
-                display text at text-5xl (48px), so WCAG 2.2 §1.4.3 grants the
-                large-text 3:1 exemption (same rule the hero's "gastronomicznych"
-                relies on). Never use text-brand-green below display size.
+                Display numeral in LINK-green, not brand-green. The card surface
+                is now bg-mist, and brand-green on mist is 2.98:1 — banned even
+                for large display text (see tokens.ts `mist` note and the ban in
+                tests/contrast/tokens.test.ts). link-green (#29632C) is 6.27:1 on
+                mist, clearing AA outright at this size. Swapping the token is the
+                cleaner fix than wrapping each numeral in a bg-page chip.
               */}
-              <span className="text-5xl font-bold leading-none text-brand-green">{step.n}</span>
+              <span className="text-5xl font-bold leading-none text-link-green">{step.n}</span>
               <h3 className="mt-5 text-xl font-semibold text-green-900">{step.title}</h3>
               <p className="mt-2 text-pretty text-sm leading-relaxed text-muted">{step.body}</p>
             </RevealItem>
@@ -254,7 +279,7 @@ export default async function HomePage() {
         has no autoplay: WCAG 2.2.2 would then owe a pause control, and a logo
         row that moves by itself earns nothing.
       */}
-      <Section className="!pt-0">
+      <Section tone="mist">
         <Reveal>
           <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
             Serwisujemy urządzenia wiodących marek
@@ -266,9 +291,10 @@ export default async function HomePage() {
 
         <Carousel label="Marki, które serwisujemy" className="mt-10">
           {brands.map((brand) => (
+            // bg-page so the card (and its link-green "Autoryzowany serwis" label) reads on the mist band.
             <div
               key={brand.slug}
-              className="flex h-full min-h-32 flex-col justify-center rounded-2xl border border-green-900/10 p-5"
+              className="flex h-full min-h-32 flex-col justify-center rounded-2xl border border-green-900/10 bg-page p-5"
             >
               <span className="text-base font-semibold text-green-900">{brand.name}</span>
               {brand.authorized ? (

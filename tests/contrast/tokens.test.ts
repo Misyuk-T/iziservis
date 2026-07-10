@@ -44,6 +44,17 @@ describe('AD-7: the reference palette bug cannot come back', () => {
   it('link-green clears AAA for green text on the page canvas', () => {
     expect(contrastRatio(tokens['link-green'].hex, pageBackground)).toBeGreaterThanOrEqual(7)
   })
+
+  it('brand-green may not sit directly on mist either', () => {
+    // #419D45 on mist (#EAF1EC) measures 2.98:1 — under even the 3:1 non-text
+    // bar, and nowhere near the 4.5:1 text bar. So brand-green icons, numerals
+    // and text must never sit directly on a mist band; they belong inside a
+    // bg-page card. The homepage honours this: on every mist band the
+    // brand-green accents (trust-card icons, equipment/carousel cards) live
+    // only in bg-page cards, and the "Jak działamy" step numerals — which sit
+    // on bg-mist cards — use link-green (6.27:1 on mist), not brand-green.
+    expect(contrastRatio(tokens['brand-green'].hex, tokens.mist.hex)).toBeLessThan(3)
+  })
 })
 
 describe('the two whites are not interchangeable', () => {
