@@ -10,7 +10,11 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
-    localPatterns: [{ pathname: '/api/media/file/**' }],
+    localPatterns: [
+      { pathname: '/api/media/file/**' },
+      // /hero/** is the client's own photography, shipped statically in /public.
+      { pathname: '/hero/**' },
+    ],
   },
 
   /**

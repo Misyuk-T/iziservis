@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal'
@@ -28,27 +29,41 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
       {/*
-        Nothing in this hero animates on mount.
-        The <h1> is the LCP element, and Chrome does not count an element with
-        opacity:0 as painted — wrapping it in <Reveal> would defer LCP by the
-        length of the animation and quietly fail the Core Web Vitals target that
-        the PRD sets. Motion starts below the fold, where it costs nothing.
-      */}
-      <section className="on-dark relative isolate overflow-hidden bg-green-900 text-text-on-dark">
-        <DecorativeGrid />
+        AD-15: nothing in this hero animates on mount. No Reveal wrappers here.
+        The <h1> (or the priority hero photo) is the LCP element, and Chrome does
+        not count an element with opacity:0 as painted — wrapping the fold in
+        <Reveal> would defer LCP by the length of the animation and quietly fail
+        the Core Web Vitals target. Motion starts at the trust card and below.
 
-        <Container className="grid items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-28">
+        The hero now sits on the page canvas (--color-page), not a dark surface:
+        no `on-dark`, no DecorativeGrid.
+      */}
+      <section className="relative isolate overflow-hidden">
+        <Container className="grid items-center gap-10 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:pb-28 lg:pt-20">
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-brand-green/40 px-4 py-1.5 text-sm font-medium">
+            {/* Green-outlined pill; label in link-green (AAA on the canvas), dot decorative. */}
+            <p className="inline-flex items-center gap-2 rounded-full border border-brand-green px-4 py-1.5 text-sm font-semibold text-link-green">
               <span className="size-2 rounded-full bg-brand-green" aria-hidden="true" />
-              Serwis w całej Polsce
+              Profesjonalny serwis · cała Polska
             </p>
 
-            <h1 className="mt-6 text-balance text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+            {/*
+              "gastronomicznych" stays in text-brand-green (#419D45) ON PURPOSE —
+              do not "fix" it to a darker token.
+
+              brand-green measures 3.39:1 on the page canvas (#FEFEFE), which
+              FAILS the 4.5:1 bar for normal text but PASSES the 3:1 bar WCAG 2.2
+              §1.4.3 grants "large text" (bold ≥ 18.66px / 14pt, or ≥ 24px). This
+              word is bold display text at text-4xl (36px) at the SMALLEST
+              breakpoint and only grows from there, so the large-text exemption
+              applies at every viewport. See tokens.ts (brand-green: nontext-only
+              incl. large display accents) and reference-v2-analysis.md.
+            */}
+            <h1 className="mt-6 text-balance text-4xl font-bold leading-[1.05] tracking-tight text-green-900 sm:text-5xl lg:text-6xl xl:text-7xl">
               Serwis urządzeń <span className="text-brand-green">gastronomicznych</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-pretty text-lg text-muted-on-dark">
+            <p className="mt-6 max-w-xl text-pretty text-lg text-muted">
               Profesjonalne naprawy, przeglądy oraz doradztwo w doborze niezawodnego sprzętu do
               każdej kuchni.
             </p>
@@ -60,73 +75,70 @@ export default async function HomePage() {
               </ButtonAnchor>
               <GhostLink href="/kontakt">Wyceń naprawę</GhostLink>
             </div>
+
+            {/*
+              The dark hero's aside (authorized brands + hours) is gone with the
+              dark surface. This one quiet line preserves the gist; the full
+              hours/brands live in the footer, /kontakt and the carousel below.
+            */}
+            <p className="mt-6 text-sm text-muted">
+              pn – pt {COMPANY.opensAt}–{COMPANY.closesAt} · Autoryzowany serwis{' '}
+              {authorized.length} marek
+            </p>
           </div>
 
           {/*
-            The reference fills this column with a stock photograph. There is no
-            photography in the project, and a placeholder would be worse than
-            nothing — so it carries the one thing a panicking kitchen manager
-            actually wants to see: who we are authorized by, and when we answer.
+            The client's real photo — the service being sold. Arch/dome mask per
+            the reference. `fill` inside a fixed-aspect box means the box reserves
+            its height from CSS before the image loads, so there is no layout
+            shift (CLS budget) and nothing can overflow the grid cell. `priority`
+            keeps it out of the lazy-load path since it may be the LCP element.
+            On mobile it stacks BELOW the text (DOM order + single column).
           */}
-          <aside className="rounded-3xl border border-text-on-dark/15 bg-green-800/60 p-6 backdrop-blur-sm sm:p-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-green">
-              Autoryzowany serwis
-            </h2>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {authorized.map((brand) => (
-                <li
-                  key={brand.slug}
-                  className="rounded-full border border-text-on-dark/20 px-3 py-1.5 text-sm font-medium"
-                >
-                  {brand.name}
-                </li>
-              ))}
-            </ul>
-
-            <hr className="my-6 border-text-on-dark/15" />
-
-            <dl className="space-y-3 text-sm">
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-on-dark">Godziny pracy</dt>
-                <dd className="text-right font-medium">
-                  pn – pt, {COMPANY.opensAt}–{COMPANY.closesAt}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-4">
-                <dt className="text-muted-on-dark">Obszar</dt>
-                <dd className="text-right font-medium">Cała {COMPANY.areaServed}</dd>
-              </div>
-            </dl>
-
-            <p className="mt-5 text-sm text-muted-on-dark">{COMPANY.afterHoursNote}</p>
-          </aside>
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[999px] rounded-b-3xl border border-green-900/10 sm:aspect-[3/4]">
+            <Image
+              src="/hero/serwis-ekspresu.jpg"
+              alt="Technik IZI Serwis podczas naprawy ekspresu do kawy"
+              fill
+              priority
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="object-cover"
+            />
+          </div>
         </Container>
-      </section>
 
-      {/*
-        The reference's trust bar reads "Serwis 24/7" and "Serwis 7 dni w
-        tygodniu". Both contradict the contact page, so neither ships. See OQ-5.
-      */}
-      <section className="on-dark bg-green-700 text-text-on-dark">
-        <Container>
-          <RevealGroup className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-3 lg:py-12">
-            <RevealItem>
-              <p className="font-semibold">Doradca dla Twojego regionu</p>
-              <p className="mt-1 text-sm text-muted-on-dark">
-                Zgłoszenie trafia prosto do właściwego województwa
-              </p>
+        {/*
+          Trust bar → floating white card overlapping the hero's bottom edge.
+          The reference's four items include "24h" and "7 dni w tygodniu", both
+          false (OQ-5); these three are the verified claims. This card sits at the
+          fold boundary, not above the primary content, so it may animate.
+          Icons are inline outline SVGs, stroke in brand-green (nontext, 3:1 ok),
+          aria-hidden — no icon library.
+        */}
+        <Container className="relative z-10 -mt-10 sm:-mt-14">
+          <RevealGroup className="grid gap-6 rounded-2xl border border-green-900/10 bg-page p-6 shadow-lg sm:grid-cols-3 sm:gap-8 sm:p-8">
+            <RevealItem className="flex items-start gap-4">
+              <MapPinIcon />
+              <div>
+                <p className="font-semibold text-green-900">Doradca dla Twojego regionu</p>
+                <p className="mt-1 text-sm text-muted">
+                  Zgłoszenie trafia prosto do właściwego województwa
+                </p>
+              </div>
             </RevealItem>
-            <RevealItem>
-              <p className="font-semibold">Oryginalne części</p>
-              <p className="mt-1 text-sm text-muted-on-dark">
-                Procedury producenta, zachowana gwarancja
-              </p>
+            <RevealItem className="flex items-start gap-4">
+              <ShieldCheckIcon />
+              <div>
+                <p className="font-semibold text-green-900">Oryginalne części</p>
+                <p className="mt-1 text-sm text-muted">Procedury producenta, zachowana gwarancja</p>
+              </div>
             </RevealItem>
-            <RevealItem>
-              <p className="font-semibold">Naprawy awaryjne i przeglądy</p>
-              <p className="mt-1 text-sm text-muted-on-dark">
-                Od diagnozy po powrót kuchni do pracy
-              </p>
+            <RevealItem className="flex items-start gap-4">
+              <WrenchIcon />
+              <div>
+                <p className="font-semibold text-green-900">Naprawy awaryjne i przeglądy</p>
+                <p className="mt-1 text-sm text-muted">Od diagnozy po powrót kuchni do pracy</p>
+              </div>
             </RevealItem>
           </RevealGroup>
         </Container>
@@ -229,19 +241,45 @@ export default async function HomePage() {
   )
 }
 
-/** Purely decorative, so it is hidden from assistive technology. */
-function DecorativeGrid() {
+/*
+ * Trust-card icons. Inline outline SVGs, no icon library. Each is decorative
+ * (the adjacent heading carries the meaning) so it is aria-hidden; the stroke
+ * is brand-green, which owes only the 3:1 non-text bar and clears it.
+ */
+
+const iconProps = {
+  className: 'size-6 shrink-0 text-brand-green',
+  viewBox: '0 0 24 24',
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 1.75,
+  strokeLinecap: 'round' as const,
+  strokeLinejoin: 'round' as const,
+  'aria-hidden': true,
+}
+
+function MapPinIcon() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgba(65,157,69,0.18),transparent_55%)]" />
-      <svg className="absolute inset-0 size-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-            <path d="M48 0H0v48" fill="none" stroke="currentColor" strokeWidth="1" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
-    </div>
+    <svg {...iconProps}>
+      <path d="M12 21c4-4.5 7-8 7-11a7 7 0 1 0-14 0c0 3 3 6.5 7 11Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  )
+}
+
+function ShieldCheckIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  )
+}
+
+function WrenchIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M15 6.5a4 4 0 0 0-5.2 5.2l-5.3 5.3a1.8 1.8 0 0 0 2.5 2.5l5.3-5.3A4 4 0 0 0 17.5 9l-2.4 2.4-2-2L15.5 7Z" />
+    </svg>
   )
 }

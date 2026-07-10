@@ -103,6 +103,24 @@ The pattern worth noting: four of the six were places where a comment or a test
 asserted something the code did not do. Tests that check a data structure rather
 than the running system are the most expensive kind of false confidence.
 
+## Session 2 (2026-07-10, afternoon)
+
+- **Lenis removed.** The client's verdict on smooth scroll was "slowpoke";
+  scrolling is native now, the scrollbar is branded via CSS `scrollbar-color`
+  on tokens. Reveals, hovers and the carousel are untouched.
+- **Hero redesigned to reference v2** (light theme): arch-masked photo, floating
+  trust card with outline icons, green display accent. The photo is the
+  client's own (technician servicing an espresso machine, pulled from their
+  WordPress uploads), served as ~49KB AVIF through the Next optimizer.
+  LCP: 96 ms on the image. The v2 reference repeats every invented fact from
+  v1 (24/7, wrong phone, 15+/5000+, "Warszawa i okolice") plus a misspelled
+  "UNIK" and three unserviced brands in its logo wall — none of it shipped.
+  See docs/design/reference-v2-analysis.md.
+- Code in this session was written by Opus 4.8 subagents with Fable
+  orchestrating; an optimizer `localPatterns` gap the hero agent found was
+  fixed properly (config now allows `/hero/**`) rather than left as
+  `unoptimized`.
+
 ## Risks
 
 - **The e2e suite writes to the production database.** `.env` points at the live
