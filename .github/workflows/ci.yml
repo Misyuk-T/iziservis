@@ -1,0 +1,41 @@
+# CI runs the two gates that need no secrets: the type check and the unit tests.
+#
+# `pnpm build` and the Playwright e2e suite are deliberately NOT here. Both need
+# live database credentials — `next build` boots Payload (which validates the
+# env and connects), and the e2e tests write real `leads` rows to whatever
+# `.env` points at. There is no test database yet, and pointing CI at the live
+# Supabase project would both leak credentials into the runner and pollute
+# production data. The e2e suite joins CI once a dedicated test database exists
+# (tracked in docs/STATUS.md); until then it stays a local/manual gate.
+#
+# `pnpm test` is `vitest run`; it is spelled out explicitly below so this file
+# does not silently start doing more (or less) if that script changes.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm typecheck
+
+      - run: pnpm vitest run

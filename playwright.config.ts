@@ -4,6 +4,10 @@ const PORT = Number(process.env.E2E_PORT ?? 3100)
 
 export default defineConfig({
   testDir: './tests/e2e',
+  // Removes the `leads` rows the contact tests create, so the suite no longer
+  // depends on someone deleting them by hand. Not collected as a test — it does
+  // not match the `*.spec.ts` pattern.
+  globalTeardown: './tests/e2e/global-teardown.ts',
   fullyParallel: true,
   reporter: process.env.CI ? 'github' : 'list',
   use: {

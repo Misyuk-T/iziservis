@@ -147,8 +147,12 @@ Full matrix after: 235 e2e + 68 unit green.
 
 - **The e2e suite writes to the production database.** `.env` points at the live
   Supabase project, so the contact-form tests create real `leads` rows. They are
-  scoped to the desktop project and cleaned by hand. This needs a dedicated test
-  database before anyone runs the suite in CI.
+  scoped to the desktop project. A Playwright `globalTeardown`
+  (`tests/e2e/global-teardown.ts`) now deletes the fixture rows
+  (`email = 'marek@bistro.example'`) over the direct connection after each run,
+  so they are no longer cleaned by hand. The proper fix remains a dedicated test
+  database before the suite runs in CI — the teardown reduces the blast radius,
+  it does not make writing to production safe.
 - **The database password was pasted into a chat transcript.** Rotate it. See
   `docs/internal/credentials.md`, which is gitignored.
 - **No SMTP credentials yet.** The adapter is wired; set `SMTP_HOST`,

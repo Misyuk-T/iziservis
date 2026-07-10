@@ -1,17 +1,36 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
 import config from '@payload-config'
 
 import { COMPANY } from '@/domain/company'
 import { isBot, leadSchema } from '@/domain/leadSchema'
+import { createLimiter } from '@/domain/rateLimit'
 import { hasEmail } from '@/env'
 
 export type FormState = {
   status: 'idle' | 'success' | 'error'
   message?: string
   fieldErrors?: Record<string, string>
+}
+
+/**
+ * Module-scope so the window survives across requests within one instance.
+ *
+ * This is per-instance and in-memory: on multi-instance serverless each instance
+ * holds its own window, so the cap degrades but does not disappear (see
+ * rateLimit.ts). It is not a substitute for a durable, shared store — that is the
+ * production-grade follow-up. It closes the launch-blocking gap where a bot could
+ * submit through the server action unbounded, and nothing more.
+ */
+const limiter = createLimiter({ limit: 5, windowMs: 10 * 60 * 1000 })
+
+async function clientIp(): Promise<string> {
+  // x-forwarded-for is a comma-separated chain; the first entry is the client.
+  const forwarded = (await headers()).get('x-forwarded-for')
+  return forwarded?.split(',')[0]?.trim() || 'unknown'
 }
 
 /**
@@ -28,6 +47,16 @@ export type FormState = {
 export async function submitLead(_prev: FormState, formData: FormData): Promise<FormState> {
   // Before validation, so a bot never receives an error naming the honeypot.
   if (isBot(formData)) return { status: 'success' }
+
+  // Before validation on purpose: invalid submissions still count against the
+  // window, so a bot cannot probe the schema for free by spraying malformed
+  // payloads, and no row is written just to be rate-limited.
+  if (!limiter.check(await clientIp())) {
+    return {
+      status: 'error',
+      message: `Zbyt wiele zgłoszeń z tego adresu. Spróbuj ponownie później lub zadzwoń: ${COMPANY.phoneDisplay}`,
+    }
+  }
 
   const raw = {
     name: formData.get('name'),

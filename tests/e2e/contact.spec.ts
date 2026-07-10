@@ -87,3 +87,41 @@ test('the honeypot silently accepts a bot without persisting it', async ({ page 
     timeout: 15_000,
   })
 })
+
+/**
+ * The rate limiter is keyed on the client IP (x-forwarded-for). This block gives
+ * itself a dedicated IP so its six submissions burn a *fresh* window instead of
+ * the one the other tests in this file share — otherwise, under fullyParallel,
+ * their submissions and these would race for the same budget. The chosen address
+ * is TEST-NET-3 (RFC 5737), reserved for documentation and never routable.
+ */
+test.describe('contact form rate limiting', () => {
+  test.use({ extraHTTPHeaders: { 'x-forwarded-for': '203.0.113.7' } })
+
+  test('the sixth rapid submission is rate-limited, not merely re-validated', async ({ page }) => {
+    await page.goto('/kontakt')
+
+    const submit = page.getByRole('button', { name: /Wyślij zgłoszenie/i })
+    // The message renders both in the sr-only live region and in the visible
+    // banner; scope to the paragraph so the assertion is unambiguous.
+    const validationBanner = page.getByRole('paragraph').filter({ hasText: 'Sprawdź zaznaczone pola.' })
+    const rateLimitBanner = page
+      .getByRole('paragraph')
+      .filter({ hasText: 'Zbyt wiele zgłoszeń z tego adresu' })
+
+    // Five empty submissions. Each fails zod (so nothing is ever written) but is
+    // still under the limit, so it comes back as ordinary field validation.
+    // Clicking by the idle button name auto-waits for the previous submission to
+    // resolve (the button reads "Wysyłanie…" while pending), serialising the six.
+    for (let i = 0; i < 5; i++) {
+      await submit.click()
+      await expect(validationBanner).toBeVisible({ timeout: 15_000 })
+    }
+
+    // The sixth trips the limiter: the response is the rate-limit message, and
+    // the ordinary validation banner is gone.
+    await submit.click()
+    await expect(rateLimitBanner).toBeVisible({ timeout: 15_000 })
+    await expect(validationBanner).toHaveCount(0)
+  })
+})
